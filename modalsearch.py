@@ -15,6 +15,9 @@ from pitube import YoutubeList
 #for download from youtube with thread and callback
 from youtube import YoutubeDownload
 
+
+import os
+
 try:
     from devslib.utils import RotativeImage
 except:
@@ -22,7 +25,6 @@ except:
     from devslib.utils import RotativeImage
 
 import cloud
-import os
 
 class ResultItem(BoxLayout):
     def do_download(self):
