@@ -1,0 +1,5 @@
+*.pyc
+playlists.db
+bin
+downloads
+.buildozer
