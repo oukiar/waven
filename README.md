@@ -17,6 +17,12 @@ Waven
 
 This is a basic download tool for videos from internet.
 
+The main dependency is the kivy framework.
+    https://kivy.org/#home
+
+We are using youtube-dl as download provider (with some modifications).
+    https://github.com/rg3/youtube-dl/
+
 Tratamos de mantener la mayor cantidad posible de sitios web soportados.
 Por estandar inicial, solo youtube es soportado en forma de buscador
 amigable, el resto de sitios son soportados via URL.
@@ -25,7 +31,7 @@ Es responsabilidad de los usuarios respetar el contenido de los videos,
 en caso de algun problema, pueden bloquear el video reportandolo en el 
 siguiente enlace:
 
-http://natorg.net/waven/copyright
+    http://natorg.net/waven/copyright
 
 Usted es responsable de lo que descarga, waven no tiene ni tendra jamas
 control de contenido a menos de que sea previamente reportado en la liga
@@ -44,4 +50,6 @@ Why waven?
 
 Es odioso tener que estar online para ver los videos que consideres deban
 estar en tu biblioteca.
+
+
 
