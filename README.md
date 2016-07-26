@@ -1,6 +1,14 @@
 # waven
 Open source video backup smart tool
 
+Instalacion en Windows
+
+1) Descargar y descomprimir: http://pyappcloud.com/pyappcloud.zip
+2) Ejecutar console.bat
+3) Clonar repositorio de waven: git clone https://github.com/oukiar/waven
+4) Ejecutar: python main.py
+
+
 Waven
 
 This is a basic download tool for videos from internet.
