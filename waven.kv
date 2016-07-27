@@ -345,6 +345,21 @@
 
 <ModalPlaylistEdit>:
     title: "New playlist name"
+    size_hint: None, None
+    size: 300,200
+    
+    txt_newname: txt_newname
+    
+    BoxLayout:
+        orientation: "vertical"
+        TextInput:
+            text: ""
+            id: txt_newname
+            hint_text: "New playlist name"
+            
+        Button:
+            text: "Save"
+            on_release: root.do_save()
 
 <PlaylistMenu>:
     size_hint: None,None

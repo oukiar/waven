@@ -67,7 +67,42 @@ class NGVar:
         '''
         if self.objectId != "":
             #update
-            pass
+            sql = "update " + self.className + " set "
+            
+            values = ""
+            
+            for i in dir(self):
+                if i not in self.members_backlist and i != "members_backlist":
+                                        
+                    #print (str(type(getattr(self, i) )))
+                    
+                    if str(type(getattr(self, i) )) in ["<type 'int'>", "<class 'int'>"]:
+                        val = str(getattr(self, i))
+                    else:
+                        try:
+                            val = "'" + str(getattr(self, i) ) + "'"
+                        except:
+                            val = "'" + str(getattr(self, i).encode('utf8') ) + "'"
+            
+                    if values == "":
+                        values = i + "=" + val
+                    else:
+                        values += ", " + i + "=" + val
+            
+            sql += values + " where objectId='"+ self.objectId + "'"  
+            
+            
+            try:
+                cursor = cnx.cursor()
+                if cursor.execute(sql):
+                    #print("SQL: " + sql)
+                    cnx.commit()
+                    return True
+                    
+            except:
+                print("Error updating-saving: " + sql)
+            
+            return False
         else:
             #create object unique ID
             self.objectId = str(uuid.uuid4())
@@ -124,7 +159,7 @@ class NGVar:
                 if i not in self.members_backlist and i != "members_backlist":
                     sql += ", " + i #HERE: avoid the sqlinjection
                     
-                    print (str(type(getattr(self, i) )))
+                    #print (str(type(getattr(self, i) )))
                     
                     if str(type(getattr(self, i) )) in ["<type 'int'>", "<class 'int'>"]:
                         values += ", " + str(getattr(self, i))

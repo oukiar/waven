@@ -11,7 +11,11 @@ import os
 from modaladdplaylist import ModalAddPlaylist
 
 class ModalPlaylistEdit(Popup):
-    pass
+    def do_save(self):
+        print("Rename to " + self.txt_newname.text)
+        
+        App.get_running_app().root.current_playlist.Title = self.txt_newname.text
+        App.get_running_app().root.current_playlist.save()
 
 class PlaylistMenu(Popup):
     def do_delete(self):
