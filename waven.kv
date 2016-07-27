@@ -343,17 +343,25 @@
                 on_release: root.do_download()
 
 <PlaylistMenu>:
+    size_hint: None,None
+    size: (200,400)
     title: "Playlist menu"
     BoxLayout:
         orientation: "vertical"
         Button:
             text: "Rename"
+            font_size: 24
+            on_release: root.do_rename()
         Button:
             text: "Delete"
+            font_size: 24
+            on_release: root.do_delete()
         Button:
             text: "Play All"
+            font_size: 24
         Button:
             text: "Edit Tags"
+            font_size: 24
 
 <Waven>:
 

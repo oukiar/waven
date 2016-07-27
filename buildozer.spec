@@ -22,7 +22,7 @@ source.include_exts = py,png,jpg,kv,atlas,json,mp4,mp3
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-#source.exclude_dirs = tests, bin, downloads
+source.exclude_dirs = tests, bin, downloads
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -36,7 +36,8 @@ version = 0.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = pyjnius, lxml, pil, ffmpeg, plyer, netifaces, openssl, sqlite3, kivy
+#requirements = pyjnius, lxml, pil, ffmpeg, plyer, netifaces, openssl, sqlite3, kivy
+requirements = hostpython2, kivy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes

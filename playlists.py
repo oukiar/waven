@@ -9,7 +9,22 @@ import cloud
 from modaladdplaylist import ModalAddPlaylist
 
 class PlaylistMenu(Popup):
-    pass
+    def do_delete(self):
+        print("Deleting playlist: " + App.get_running_app().root.current_playlist.Title)
+        
+        #TODO: pedir confirmacion
+        
+        #delete
+        App.get_running_app().root.current_playlist.delete()
+        
+        self.dismiss()
+        
+        App.get_running_app().root.playlists.update_view()
+        App.get_running_app().root.show_playlists()
+        
+        
+    def do_rename(self):
+        pass
 
 class PlayListItem(BoxLayout):
     def update_tracklist(self):

@@ -149,11 +149,20 @@ class NGVar:
             
             return False
 
-    def delete(self):
+    def delete(self, destroy=True):
     	'''
-    	By default soft deletion
+    	By default delete the row ... 
     	'''
-    	pass
+    	sql = "delete from " + self.className + " where objectId='" + self.objectId + "'"
+        print("Deleting: " + sql)
+        
+        cursor = cnx.cursor()
+        if cursor.execute(sql):
+            #print("SQL: " + sql)
+            cnx.commit()
+            return True
+        
+        return False
 
     def destroy(self):
     	'''
