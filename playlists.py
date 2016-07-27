@@ -70,4 +70,8 @@ class Playlists(BoxLayout):
         print("Mostrando canciones")
         
         App.get_running_app().root.screens.current = "songs"
+        
+    def show_menu(self):
+        print (self.items.scroll_distance)
+        print (self.items.scroll_timeout)
     

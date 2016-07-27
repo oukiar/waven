@@ -27,7 +27,7 @@
 	title:title
 	
 	size_hint_y: None
-    height: 50
+    height: "10mm"
     
  
     canvas:
@@ -89,7 +89,7 @@
         bar_color: 0.89,0.559,0.270,1
         bar_inactive_color: 0.180,0.537,0.619,1
         scroll_distance: 100
-        scroll_timeout: 500
+        scroll_timeout: 400
         spacing: 5
         padding: 10
             
@@ -101,7 +101,7 @@
             on_release: root.open_addplaylist()
         Button:
             text: "Menu"
-            #on_release: root.show_songs()
+            on_release: root.show_menu()
         Button:
             text: "Playing"
             on_release: app.root.show_playing()
