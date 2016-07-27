@@ -123,6 +123,7 @@ class ModalDownloadByURL(Popup):
         item.title.text = "Waiting download video title"
         item.url = self.txt_url.text
         item.playlist = App.get_running_app().root.current_playlist
+        item.modal = self
         
         App.get_running_app().root.modaldownloads.layout.add_widget(item)
         
@@ -201,9 +202,13 @@ class DownloadItem(BoxLayout):
             self.title.text = os.path.splitext(os.path.basename(self.filename))[0]
             
     def do_play(self, w):
+        
+        self.modal.dismiss()
+        
         App.get_running_app().root.modalsearch.dismiss()
         App.get_running_app().root.do_play(filename=self.song_object.Filename, song=self.song_object)
         App.get_running_app().root.show_playing()
+        
         
 class ModalDownloads(Popup):
     pass
