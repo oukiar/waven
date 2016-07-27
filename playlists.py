@@ -6,13 +6,27 @@ from kivy.uix.popup import Popup
 
 import cloud
 
+import os
+
 from modaladdplaylist import ModalAddPlaylist
+
+class ModalPlaylistEdit(Popup):
+    pass
 
 class PlaylistMenu(Popup):
     def do_delete(self):
         print("Deleting playlist: " + App.get_running_app().root.current_playlist.Title)
         
         #TODO: pedir confirmacion
+        
+        #delete files
+        query = cloud.Query(className="Songs")
+        query.equalTo("Playlist", App.get_running_app().root.current_playlist.objectId)
+        result = query.find()
+        
+        for i in result:
+            print i.Filename
+            os.remove(i.Filename)
         
         #delete
         App.get_running_app().root.current_playlist.delete()
@@ -24,7 +38,7 @@ class PlaylistMenu(Popup):
         
         
     def do_rename(self):
-        pass
+        ModalPlaylistEdit().open()
 
 class PlayListItem(BoxLayout):
     def update_tracklist(self):

@@ -104,6 +104,7 @@
             #on_release: root.show_songs()
         Button:
             text: "Playing"
+            on_release: app.root.show_playing()
 
 <SongItem>:
     title:title
@@ -341,6 +342,9 @@
             Button:
                 text: "OK"
                 on_release: root.do_download()
+
+<ModalPlaylistEdit>:
+    title: "New playlist name"
 
 <PlaylistMenu>:
     size_hint: None,None

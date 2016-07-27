@@ -123,12 +123,16 @@ class ModalDownloadByURL(Popup):
         item.title.text = "Waiting download video title"
         item.url = self.txt_url.text
         item.playlist = App.get_running_app().root.current_playlist
-        item.modal = self
+        #item.modal = self
         
         App.get_running_app().root.modaldownloads.layout.add_widget(item)
         
         #start the download
         YoutubeDownload(item=item, url=item.url, filename=item.title.text, on_complete=item.on_complete, originaltitle=True)
+       
+        self.dismiss()
+        App.get_running_app().root.modaldownloads.open()
+        
        
 class DownloadItem(BoxLayout):
     def on_complete(self, dt):
@@ -203,7 +207,10 @@ class DownloadItem(BoxLayout):
             
     def do_play(self, w):
         
-        self.modal.dismiss()
+        #close the url modal
+        #self.modal.dismiss()
+        
+        App.get_running_app().root.modaldownloads.dismiss()
         
         App.get_running_app().root.modalsearch.dismiss()
         App.get_running_app().root.do_play(filename=self.song_object.Filename, song=self.song_object)
