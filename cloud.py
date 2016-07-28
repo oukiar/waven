@@ -188,7 +188,7 @@ class NGVar:
     	'''
     	By default delete the row ... 
     	'''
-    	sql = "delete from " + self.className + " where objectId='" + self.objectId + "'"
+        sql = "delete from " + self.className + " where objectId='" + self.objectId + "'"
         print("Deleting: " + sql)
         
         cursor = cnx.cursor()
