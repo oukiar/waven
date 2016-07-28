@@ -185,9 +185,9 @@ class NGVar:
             return False
 
     def delete(self, destroy=True):
-    	'''
-    	By default delete the row ... 
-    	'''
+        '''
+        By default delete the row ... 
+        '''
         sql = "delete from " + self.className + " where objectId='" + self.objectId + "'"
         print("Deleting: " + sql)
         
