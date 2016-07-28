@@ -29,7 +29,7 @@ class PlaylistMenu(Popup):
         result = query.find()
         
         for i in result:
-            print i.Filename
+            print (i.Filename)
             os.remove(i.Filename)
         
         #delete
