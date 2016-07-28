@@ -46,7 +46,15 @@ from kivy.app import App
 import os
 import time
 import json
-import cloud
+
+try:
+    import devslib.cloud as cloud
+except:
+    os.system("git clone https://github.com/oukiar/devslib")
+    
+    import devslib.cloud as cloud
+
+
 
 from functools import partial
 

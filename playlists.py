@@ -4,7 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 
 
-import cloud
+import devslib.cloud as cloud
 
 import os
 

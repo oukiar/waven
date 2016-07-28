@@ -18,13 +18,9 @@ from youtube import YoutubeDownload
 
 import os
 
-try:
-    from devslib.utils import RotativeImage
-except:
-    os.system("git clone https://github.com/oukiar/devslib")
-    from devslib.utils import RotativeImage
+from devslib.utils import RotativeImage
 
-import cloud
+import devslib.cloud as cloud
 
 class ResultItem(BoxLayout):
     def do_download(self):

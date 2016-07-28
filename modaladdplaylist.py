@@ -2,7 +2,7 @@
 from kivy.app import App
 from kivy.uix.popup import Popup
 
-import cloud
+import devslib.cloud as cloud
 
 class ModalAddPlaylist(Popup):
     def create_playlist(self):
