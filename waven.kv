@@ -396,6 +396,7 @@
     playlisttitle:playlisttitle
     queuecounter:queuecounter
     videoprogress:videoprogress
+    btn_maximize:btn_maximize
     
     canvas:
         Color:
@@ -532,12 +533,23 @@
                             text: "00:00"
                             #color: 0.89,0.559,0.270,1
                     
+                RelativeLayout:
                     
-                Video:
-					id: video
-                    on_state: root.on_video_state(args[1])
-                    on_loaded: root.on_videoloaded()
-                    on_position: root.update_time(args[1])
+                    Video:
+                        id: video
+                        on_state: root.on_video_state(args[1])
+                        on_loaded: root.on_videoloaded()
+                        on_position: root.update_time(args[1])
+                        on_touch_down: root.show_maximize()
+                        
+                    Button:
+                        id: btn_maximize
+                        opacity: 0
+                        size_hint: None, None
+                        size: 64, 64
+                        pos_hint: {'x':.8, 'y':.8}
+                        background_normal: "images/maximize_64.png"
+                        background_down: "images/maximize_64_down.png"
                     
                 AnchorLayout:
                     size_hint_y: None
