@@ -24,7 +24,7 @@ import devslib.cloud as cloud
 
 class ResultItem(BoxLayout):
     def do_download(self):
-        print("Downloading " + self.title.text)
+        print("Downloading " + self.title.text.encode('utf8') )
         
         #remove download button
         self.layout_download.remove_widget(self.btn_download)
@@ -54,7 +54,7 @@ class ResultItem(BoxLayout):
         #almacenar en la base de datos
         song = cloud.create("Songs")
         
-        song.Title = self.title.text
+        song.Title = self.title.text #.encode('utf8')
         song.Duration = 185 #in seconds
         song.Filename = self.filename
         song.URL = self.url
@@ -79,7 +79,7 @@ class ResultItem(BoxLayout):
             
             self.song_object = song
             
-            print("Almacenado en la BD: " + song.Title)
+            print("Almacenado en la BD: " + song.Title.encode('utf8') )
             print("--- Playlist: " + str(song.Playlist))
             print("--- OrderIndex: " + str(song.OrderIndex) )
             
