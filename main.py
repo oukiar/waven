@@ -3,6 +3,13 @@
 
 from kivy.app import App
 
+try:
+    import devslib.cloud as cloud
+except:
+    os.system("git clone https://github.com/oukiar/devslib")
+    
+    import devslib.cloud as cloud
+    
 from waven import Waven
 
 class WavenApp(App):
@@ -21,7 +28,7 @@ class WavenApp(App):
         
     def on_stop(self):
         print("Quiting")
-
+        cloud.quit()
 
 if __name__ == '__main__':
     app = WavenApp()
