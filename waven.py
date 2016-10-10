@@ -282,3 +282,9 @@ class Waven(RelativeLayout):
             
         #show songs screen
         self.show_songs()
+        
+    def set_volume(self, vol):
+        #print(vol)
+        
+        if self.video.state == "play":
+            self.video.volume = vol

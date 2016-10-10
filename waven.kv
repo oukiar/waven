@@ -381,6 +381,9 @@
         Button:
             text: "Edit Tags"
             font_size: 24
+        Button:
+            text: "Export to ..."
+            font_size: 24
 
 <Waven>:
 
@@ -397,6 +400,7 @@
     queuecounter:queuecounter
     videoprogress:videoprogress
     btn_maximize:btn_maximize
+    volumen:volumen
     
     canvas:
         Color:
@@ -589,6 +593,16 @@
                             background_down: "images/next_down.png"
                             on_release: root.video.state = "stop"
                     
+                AnchorLayout:
+                    anchor_x: "center"
+                    Slider:
+                        size_hint_x: None
+                        width: 150
+                        id: volumen
+                        on_value: root.set_volume(args[1])
+                        max: 1.0
+                        
+                    
                 RelativeLayout:   
                     size_hint_y: None
                     height: 128
@@ -601,6 +615,7 @@
                             background_normal: "images/back.png"
                             background_down: "images/back_down.png"
                             on_release: root.show_songs(direction="right")
+                            
                             
                     AnchorLayout:     
                         anchor_x: "right"                        
