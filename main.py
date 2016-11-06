@@ -6,6 +6,7 @@ from kivy.app import App
 try:
     import devslib.cloud as cloud
 except:
+    import os
     os.system("git clone https://github.com/oukiar/devslib")
     
     import devslib.cloud as cloud

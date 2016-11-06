@@ -24,7 +24,11 @@ import devslib.cloud as cloud
 
 class ResultItem(BoxLayout):
     def do_download(self):
-        print("Downloading " + self.title.text.encode('utf8') )
+        try:
+            print("Downloading " + self.title.text )
+        except:
+            print("Downloading " + self.title.text.encode('utf8') )
+        
         
         #remove download button
         self.layout_download.remove_widget(self.btn_download)
@@ -79,7 +83,10 @@ class ResultItem(BoxLayout):
             
             self.song_object = song
             
-            print("Almacenado en la BD: " + song.Title.encode('utf8') )
+            try:
+                print("Almacenado en la BD: " + song.Title )
+            except:
+                print("Almacenado en la BD: " + song.Title.encode('utf8') )
             print("--- Playlist: " + str(song.Playlist))
             print("--- OrderIndex: " + str(song.OrderIndex) )
             
