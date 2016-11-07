@@ -7,6 +7,7 @@ from kivy.uix.popup import Popup
 import devslib.cloud as cloud
 
 import os
+import shutil
 
 from modaladdplaylist import ModalAddPlaylist
 
@@ -29,8 +30,10 @@ class PlaylistMenu(Popup):
         result = query.find()
         
         for i in result:
-            print (i.Filename)
+            print ("Eliminando: " + i.Filename)
             os.remove(i.Filename)
+            
+        #shutil.rmtree('/folder_name')
         
         #delete
         App.get_running_app().root.current_playlist.delete()

@@ -107,7 +107,7 @@ class Waven(RelativeLayout):
     def add_songs(self):
         
         #clean previous result
-        self.modalsearch.layout.clear()
+        #self.modalsearch.layout.clear()
         
         self.modalsearch.searchtext.text = self.current_playlist.Title
         

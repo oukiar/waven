@@ -17,6 +17,7 @@ class YoutubeDownload(Thread):
         self.filename = kwargs.pop('filename')
         self.on_complete = kwargs.pop('on_complete', None)
         self.originaltitle = kwargs.pop('originaltitle', False)
+        self.downloadpath = kwargs.pop('downloadpath', 'downloads')
 
         Thread.__init__(self)
         
@@ -57,6 +58,10 @@ class YoutubeDownload(Thread):
         '''
         
         dest = self.filename + ".mp4"
+        
+        #si no existe el directorio destino, crearlo
+        if not os.path.isdir(self.downloadpath):
+            os.mkdir(self.downloadpath)
 
         if self.originaltitle:
             #   OPCIONES DESCARGA YOUTUBE
@@ -65,7 +70,8 @@ class YoutubeDownload(Thread):
                 "no_color": True,
                 "nopart": True,
                 #"outtmpl": dest,
-                "quiet": True
+                "quiet": True,
+                "downloads": self.downloadpath
                     }
 
         else:            
@@ -75,7 +81,8 @@ class YoutubeDownload(Thread):
                 "no_color": True,
                 "nopart": True,
                 "outtmpl": dest,
-                "quiet": True
+                "quiet": True,
+                "downloads": self.downloadpath
                     }
                         
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:

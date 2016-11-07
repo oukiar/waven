@@ -39,7 +39,7 @@ class ResultItem(BoxLayout):
         self.layout_download.add_widget(self.img_loading)
         
         #sys.stderr = stderr_backup
-        YoutubeDownload(item=self, url=self.url, filename=self.title.text, on_complete=self.on_complete)
+        YoutubeDownload(item=self, url=self.url, filename=self.title.text, on_complete=self.on_complete, downloadpath=os.path.join('downloads', self.playlist.Title) )
         
         
     def on_complete(self, dt):
@@ -251,7 +251,7 @@ class ModalSearch(Popup):
             #print(i.name)
             
             item = ResultItem()
-            item.title.text = i.name
+            item.title.text = i.name.replace('/', '')
             item.url = i.url
             item.playlist = App.get_running_app().root.current_playlist
             item.filename = i.name + ".mp4"
