@@ -504,38 +504,32 @@
                 
                 Label:
                     size_hint_y: None
-                    height: 70
+                    height: 40
                     font_size: 26
                     text: "Now Playing"
                     color: 0.89,0.559,0.270,1
                     
-                RelativeLayout:
+                
+                BoxLayout:
                     size_hint_y: None
-                    height: 70
+                    height: 60
+                    padding_x: 10
                     
-                    AnchorLayout:
-                        anchor_x: "left"
-
-                        Label:
-                            font_size: 24
-                            size_hint_y: None
-                            height: 70
-                            id: txt_playing
-                            text: ""
-                            #text_size: self.size
-                            
-                            text_size: self.width-50, None
-                            size: self.texture_size
-                    
-                    AnchorLayout:
-                        anchor_x: "right"
-
-                        Label:
-                            id: durationcounter
-                            size_hint_x: None
-                            font_size: 30
-                            text: "00:00"
-                            #color: 0.89,0.559,0.270,1
+                    Label:
+                        font_size: 22
+                        id: txt_playing
+                        text: ""
+                        halign: "left"
+                        text_size: self.width-10, None
+                        size: self.texture_size
+                        
+                    Label:
+                        id: durationcounter
+                        size_hint_x: None
+                        font_size: 30
+                        text: "00:00"
+                        #color: 0.89,0.559,0.270,1
+                        halign: "right"
                     
                 RelativeLayout:
                     
@@ -594,6 +588,8 @@
                             on_release: root.video.state = "stop"
                     
                 AnchorLayout:
+                    size_hint_y: None
+                    height: 40
                     anchor_x: "center"
                     Slider:
                         size_hint_x: None
