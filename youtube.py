@@ -19,6 +19,10 @@ class YoutubeDownload(Thread):
         self.originaltitle = kwargs.pop('originaltitle', False)
         self.downloadpath = kwargs.pop('downloadpath', 'downloads')
 
+        #si no existe el directorio de descarga, crearlo
+        if not os.path.isdir(self.downloadpath):
+            os.mkdir(self.downloadpath)
+
         Thread.__init__(self)
         
         self.start()
