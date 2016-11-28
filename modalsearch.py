@@ -39,7 +39,11 @@ class ResultItem(BoxLayout):
         self.layout_download.add_widget(self.img_loading)
         
         #sys.stderr = stderr_backup
-        YoutubeDownload(item=self, url=self.url, filename=self.title.text, on_complete=self.on_complete, downloadpath=os.path.join('downloads', self.playlist.Title) )
+        YoutubeDownload(item=self, 
+                        url=self.url, 
+                        filename=self.title.text, 
+                        on_complete=self.on_complete, 
+                        downloadpath=os.path.join('downloads', self.playlist.Title) )
         
         
     def on_complete(self, dt):
