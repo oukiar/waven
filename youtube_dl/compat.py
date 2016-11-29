@@ -1,3 +1,4 @@
+# coding: utf-8
 from __future__ import unicode_literals
 
 import binascii
@@ -2490,6 +2491,7 @@ class _TreeBuilder(etree.TreeBuilder):
     def doctype(self, name, pubid, system):
         pass
 
+
 if sys.version_info[0] >= 3:
     def compat_etree_fromstring(text):
         return etree.XML(text, parser=etree.XMLParser(target=_TreeBuilder()))
@@ -2594,15 +2596,19 @@ except ImportError:  # Python < 3.3
             return "'" + s.replace("'", "'\"'\"'") + "'"
 
 
-if sys.version_info >= (2, 7, 3):
+try:
+    args = shlex.split('中文')
+    assert (isinstance(args, list) and
+            isinstance(args[0], compat_str) and
+            args[0] == '中文')
     compat_shlex_split = shlex.split
-else:
+except (AssertionError, UnicodeEncodeError):
     # Working around shlex issue with unicode strings on some python 2
     # versions (see http://bugs.python.org/issue1548891)
     def compat_shlex_split(s, comments=False, posix=True):
         if isinstance(s, compat_str):
             s = s.encode('utf-8')
-        return shlex.split(s, comments, posix)
+        return list(map(lambda s: s.decode('utf-8'), shlex.split(s, comments, posix)))
 
 
 def compat_ord(c):
@@ -2781,6 +2787,7 @@ def workaround_optparse_bug9161():
                 (k, enc(v)) for k, v in kwargs.items())
             return real_add_option(self, *bargs, **bkwargs)
         optparse.OptionGroup.add_option = _compat_add_option
+
 
 if hasattr(shutil, 'get_terminal_size'):  # Python >= 3.3
     compat_get_terminal_size = shutil.get_terminal_size

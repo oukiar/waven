@@ -38,12 +38,16 @@ class ResultItem(BoxLayout):
         self.img_loading.state = "rotating"
         self.layout_download.add_widget(self.img_loading)
         
+        if not os.path.isdir(App.get_running_app().root.downloadpath):
+            os.mkdir(App.get_running_app().root.downloadpath)
+            
         #sys.stderr = stderr_backup
         YoutubeDownload(item=self, 
-                        url=self.url, 
-                        filename=self.title.text, 
-                        on_complete=self.on_complete, 
-                        downloadpath=os.path.join('downloads', self.playlist.Title) )
+                            url=self.url, 
+                            filename=self.title.text, 
+                            on_complete=self.on_complete, 
+                            downloadpath=os.path.join(App.get_running_app().root.downloadpath, self.playlist.Title) )
+        
         
         
     def on_complete(self, dt):

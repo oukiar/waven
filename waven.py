@@ -43,6 +43,8 @@ from kivy.clock import Clock
 
 from kivy.app import App
 
+from kivy.utils import platform
+
 import os
 import time
 import json
@@ -81,6 +83,10 @@ class Waven(RelativeLayout):
         self.modalsearch = ModalSearch()
         self.modaldownloads = ModalDownloads()
         
+        if platform == 'android':
+            self.downloadpath = "/mnt/sdcard/"
+        elif platform == 'linux' or platform == 'win' or platform == 'macosx':
+            self.downloadpath = "downloads"
 
         return
         
