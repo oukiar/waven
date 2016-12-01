@@ -2,21 +2,21 @@
 from __future__ import unicode_literals
 
 from .common import InfoExtractor
-from ..utils import month_by_name
+from ..utils import int_or_none
 
 
 class FranceInterIE(InfoExtractor):
-    _VALID_URL = r'https?://(?:www\.)?franceinter\.fr/emissions/(?P<id>[^?#]+)'
-
+    _VALID_URL = r'https?://(?:www\.)?franceinter\.fr/player/reecouter\?play=(?P<id>[0-9]+)'
     _TEST = {
-        'url': 'https://www.franceinter.fr/emissions/affaires-sensibles/affaires-sensibles-07-septembre-2016',
-        'md5': '9e54d7bdb6fdc02a841007f8a975c094',
+        'url': 'http://www.franceinter.fr/player/reecouter?play=793962',
+        'md5': '4764932e466e6f6c79c317d2e74f6884',
         'info_dict': {
-            'id': 'affaires-sensibles/affaires-sensibles-07-septembre-2016',
+            'id': '793962',
             'ext': 'mp3',
-            'title': 'Affaire Cahuzac : le contentieux du compte en Suisse',
-            'description': 'md5:401969c5d318c061f86bda1fa359292b',
-            'upload_date': '20160907',
+            'title': 'L’Histoire dans les jeux vidéo',
+            'description': 'md5:7e93ddb4451e7530022792240a3049c7',
+            'timestamp': 1387369800,
+            'upload_date': '20131218',
         },
     }
 
@@ -25,30 +25,23 @@ class FranceInterIE(InfoExtractor):
 
         webpage = self._download_webpage(url, video_id)
 
-        video_url = self._search_regex(
-            r'(?s)<div[^>]+class=["\']page-diffusion["\'][^>]*>.*?<button[^>]+data-url=(["\'])(?P<url>(?:(?!\1).)+)\1',
-            webpage, 'video url', group='url')
+        path = self._search_regex(
+            r'<a id="player".+?href="([^"]+)"', webpage, 'video url')
+        video_url = 'http://www.franceinter.fr/' + path
 
-        title = self._og_search_title(webpage)
-        description = self._og_search_description(webpage)
-
-        upload_date_str = self._search_regex(
-            r'class=["\']cover-emission-period["\'][^>]*>[^<]+\s+(\d{1,2}\s+[^\s]+\s+\d{4})<',
-            webpage, 'upload date', fatal=False)
-        if upload_date_str:
-            upload_date_list = upload_date_str.split()
-            upload_date_list.reverse()
-            upload_date_list[1] = '%02d' % (month_by_name(upload_date_list[1], lang='fr') or 0)
-            upload_date_list[2] = '%02d' % int(upload_date_list[2])
-            upload_date = ''.join(upload_date_list)
-        else:
-            upload_date = None
+        title = self._html_search_regex(
+            r'<span class="title-diffusion">(.+?)</span>', webpage, 'title')
+        description = self._html_search_regex(
+            r'<span class="description">(.*?)</span>',
+            webpage, 'description', fatal=False)
+        timestamp = int_or_none(self._search_regex(
+            r'data-date="(\d+)"', webpage, 'upload date', fatal=False))
 
         return {
             'id': video_id,
             'title': title,
             'description': description,
-            'upload_date': upload_date,
+            'timestamp': timestamp,
             'formats': [{
                 'url': video_url,
                 'vcodec': 'none',

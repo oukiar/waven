@@ -4,6 +4,9 @@ import itertools
 import re
 
 from .common import SearchInfoExtractor
+from ..compat import (
+    compat_urllib_parse,
+)
 
 
 class GoogleSearchIE(SearchInfoExtractor):
@@ -31,16 +34,13 @@ class GoogleSearchIE(SearchInfoExtractor):
         }
 
         for pagenum in itertools.count():
+            result_url = (
+                'http://www.google.com/search?tbm=vid&q=%s&start=%s&hl=en'
+                % (compat_urllib_parse.quote_plus(query), pagenum * 10))
+
             webpage = self._download_webpage(
-                'http://www.google.com/search',
-                'gvsearch:' + query,
-                note='Downloading result page %s' % (pagenum + 1),
-                query={
-                    'tbm': 'vid',
-                    'q': query,
-                    'start': pagenum * 10,
-                    'hl': 'en',
-                })
+                result_url, 'gvsearch:' + query,
+                note='Downloading result page ' + str(pagenum + 1))
 
             for hit_idx, mobj in enumerate(re.finditer(
                     r'<h3 class="r"><a href="([^"]+)"', webpage)):

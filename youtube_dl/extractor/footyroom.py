@@ -2,27 +2,25 @@
 from __future__ import unicode_literals
 
 from .common import InfoExtractor
-from .streamable import StreamableIE
 
 
 class FootyRoomIE(InfoExtractor):
-    _VALID_URL = r'https?://footyroom\.com/matches/(?P<id>\d+)'
+    _VALID_URL = r'https?://footyroom\.com/(?P<id>[^/]+)'
     _TESTS = [{
-        'url': 'http://footyroom.com/matches/79922154/hull-city-vs-chelsea/review',
+        'url': 'http://footyroom.com/schalke-04-0-2-real-madrid-2015-02/',
         'info_dict': {
-            'id': '79922154',
-            'title': 'VIDEO Hull City 0 - 2 Chelsea',
+            'id': 'schalke-04-0-2-real-madrid-2015-02',
+            'title': 'Schalke 04 0 – 2 Real Madrid',
         },
-        'playlist_count': 2,
-        'add_ie': [StreamableIE.ie_key()],
+        'playlist_count': 3,
+        'skip': 'Video for this match is not available',
     }, {
-        'url': 'http://footyroom.com/matches/75817984/georgia-vs-germany/review',
+        'url': 'http://footyroom.com/georgia-0-2-germany-2015-03/',
         'info_dict': {
-            'id': '75817984',
-            'title': 'VIDEO Georgia 0 - 2 Germany',
+            'id': 'georgia-0-2-germany-2015-03',
+            'title': 'Georgia 0 – 2 Germany',
         },
         'playlist_count': 1,
-        'add_ie': ['Playwire']
     }]
 
     def _real_extract(self, url):
@@ -30,8 +28,9 @@ class FootyRoomIE(InfoExtractor):
 
         webpage = self._download_webpage(url, playlist_id)
 
-        playlist = self._parse_json(self._search_regex(
-            r'DataStore\.media\s*=\s*([^;]+)', webpage, 'media data'),
+        playlist = self._parse_json(
+            self._search_regex(
+                r'VideoSelector\.load\((\[.+?\])\);', webpage, 'video selector'),
             playlist_id)
 
         playlist_title = self._og_search_title(webpage)
@@ -41,16 +40,11 @@ class FootyRoomIE(InfoExtractor):
             payload = video.get('payload')
             if not payload:
                 continue
-            playwire_url = self._html_search_regex(
+            playwire_url = self._search_regex(
                 r'data-config="([^"]+)"', payload,
                 'playwire url', default=None)
             if playwire_url:
                 entries.append(self.url_result(self._proto_relative_url(
                     playwire_url, 'http:'), 'Playwire'))
-
-            streamable_url = StreamableIE._extract_url(payload)
-            if streamable_url:
-                entries.append(self.url_result(
-                    streamable_url, StreamableIE.ie_key()))
 
         return self.playlist_result(entries, playlist_id, playlist_title)

@@ -7,6 +7,7 @@ from .common import InfoExtractor
 from ..utils import (
     determine_ext,
     ExtractorError,
+    sanitized_Request,
     urlencode_postdata,
 )
 
@@ -14,12 +15,12 @@ from ..utils import (
 class PromptFileIE(InfoExtractor):
     _VALID_URL = r'https?://(?:www\.)?promptfile\.com/l/(?P<id>[0-9A-Z\-]+)'
     _TEST = {
-        'url': 'http://www.promptfile.com/l/86D1CE8462-576CAAE416',
-        'md5': '5a7e285a26e0d66d9a263fae91bc92ce',
+        'url': 'http://www.promptfile.com/l/D21B4746E9-F01462F0FF',
+        'md5': 'd1451b6302da7215485837aaea882c4c',
         'info_dict': {
-            'id': '86D1CE8462-576CAAE416',
+            'id': 'D21B4746E9-F01462F0FF',
             'ext': 'mp4',
-            'title': 'oceans.mp4',
+            'title': 'Birds.mp4',
             'thumbnail': 're:^https?://.*\.jpg$',
         }
     }
@@ -32,23 +33,14 @@ class PromptFileIE(InfoExtractor):
             raise ExtractorError('Video %s does not exist' % video_id,
                                  expected=True)
 
-        chash = self._search_regex(
-            r'val\("([^"]*)"\s*\+\s*\$\("#chash"\)', webpage, 'chash')
         fields = self._hidden_inputs(webpage)
-        keys = list(fields.keys())
-        chash_key = keys[0] if len(keys) == 1 else next(
-            key for key in keys if key.startswith('cha'))
-        fields[chash_key] = chash + fields[chash_key]
-
+        post = urlencode_postdata(fields)
+        req = sanitized_Request(url, post)
+        req.add_header('Content-type', 'application/x-www-form-urlencoded')
         webpage = self._download_webpage(
-            url, video_id, 'Downloading video page',
-            data=urlencode_postdata(fields),
-            headers={'Content-type': 'application/x-www-form-urlencoded'})
+            req, video_id, 'Downloading video page')
 
-        video_url = self._search_regex(
-            (r'<a[^>]+href=(["\'])(?P<url>(?:(?!\1).)+)\1[^>]*>\s*Download File',
-             r'<a[^>]+href=(["\'])(?P<url>https?://(?:www\.)?promptfile\.com/file/(?:(?!\1).)+)\1'),
-            webpage, 'video url', group='url')
+        url = self._html_search_regex(r'url:\s*\'([^\']+)\'', webpage, 'URL')
         title = self._html_search_regex(
             r'<span.+title="([^"]+)">', webpage, 'title')
         thumbnail = self._html_search_regex(
@@ -57,7 +49,7 @@ class PromptFileIE(InfoExtractor):
 
         formats = [{
             'format_id': 'sd',
-            'url': video_url,
+            'url': url,
             'ext': determine_ext(title),
         }]
         self._sort_formats(formats)

@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
 
-import re
-
 from .common import InfoExtractor
 from ..utils import (
     ExtractorError,
@@ -12,8 +10,8 @@ from ..utils import (
 
 
 class RedTubeIE(InfoExtractor):
-    _VALID_URL = r'https?://(?:(?:www\.)?redtube\.com/|embed\.redtube\.com/\?.*?\bid=)(?P<id>[0-9]+)'
-    _TESTS = [{
+    _VALID_URL = r'https?://(?:www\.)?redtube\.com/(?P<id>[0-9]+)'
+    _TEST = {
         'url': 'http://www.redtube.com/66418',
         'md5': '7b8c22b5e7098a3e1c09709df1126d2d',
         'info_dict': {
@@ -25,21 +23,11 @@ class RedTubeIE(InfoExtractor):
             'view_count': int,
             'age_limit': 18,
         }
-    }, {
-        'url': 'http://embed.redtube.com/?bgcolor=000000&id=1443286',
-        'only_matching': True,
-    }]
-
-    @staticmethod
-    def _extract_urls(webpage):
-        return re.findall(
-            r'<iframe[^>]+?src=["\'](?P<url>(?:https?:)?//embed\.redtube\.com/\?.*?\bid=\d+)',
-            webpage)
+    }
 
     def _real_extract(self, url):
         video_id = self._match_id(url)
-        webpage = self._download_webpage(
-            'http://www.redtube.com/%s' % video_id, video_id)
+        webpage = self._download_webpage(url, video_id)
 
         if any(s in webpage for s in ['video-deleted-info', '>This video has been removed']):
             raise ExtractorError('Video %s has been removed' % video_id, expected=True)

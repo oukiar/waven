@@ -5,16 +5,14 @@ import re
 
 from .common import InfoExtractor
 from ..utils import (
+    decode_packed_codes,
     ExtractorError,
-    float_or_none,
-    int_or_none,
-    parse_duration,
+    parse_duration
 )
 
 
 class CDAIE(InfoExtractor):
     _VALID_URL = r'https?://(?:(?:www\.)?cda\.pl/video|ebd\.cda\.pl/[0-9]+x[0-9]+)/(?P<id>[0-9a-z]+)'
-    _BASE_URL = 'http://www.cda.pl/'
     _TESTS = [{
         'url': 'http://www.cda.pl/video/5749950c',
         'md5': '6f844bf51b15f31fae165365707ae970',
@@ -23,9 +21,6 @@ class CDAIE(InfoExtractor):
             'ext': 'mp4',
             'height': 720,
             'title': 'Oto dlaczego przed zakrętem należy zwolnić.',
-            'description': 'md5:269ccd135d550da90d1662651fcb9772',
-            'thumbnail': 're:^https?://.*\.jpg$',
-            'average_rating': float,
             'duration': 39
         }
     }, {
@@ -35,11 +30,6 @@ class CDAIE(InfoExtractor):
             'id': '57413289',
             'ext': 'mp4',
             'title': 'Lądowanie na lotnisku na Maderze',
-            'description': 'md5:60d76b71186dcce4e0ba6d4bbdb13e1a',
-            'thumbnail': 're:^https?://.*\.jpg$',
-            'uploader': 'crash404',
-            'view_count': int,
-            'average_rating': float,
             'duration': 137
         }
     }, {
@@ -49,55 +39,31 @@ class CDAIE(InfoExtractor):
 
     def _real_extract(self, url):
         video_id = self._match_id(url)
-        self._set_cookie('cda.pl', 'cda.player', 'html5')
-        webpage = self._download_webpage(
-            self._BASE_URL + '/video/' + video_id, video_id)
+        webpage = self._download_webpage('http://ebd.cda.pl/0x0/' + video_id, video_id)
 
         if 'Ten film jest dostępny dla użytkowników premium' in webpage:
             raise ExtractorError('This video is only available for premium users.', expected=True)
 
-        formats = []
+        title = self._html_search_regex(r'<title>(.+?)</title>', webpage, 'title')
 
-        uploader = self._search_regex(r'''(?x)
-            <(span|meta)[^>]+itemprop=(["\'])author\2[^>]*>
-            (?:<\1[^>]*>[^<]*</\1>|(?!</\1>)(?:.|\n))*?
-            <(span|meta)[^>]+itemprop=(["\'])name\4[^>]*>(?P<uploader>[^<]+)</\3>
-        ''', webpage, 'uploader', default=None, group='uploader')
-        view_count = self._search_regex(
-            r'Odsłony:(?:\s|&nbsp;)*([0-9]+)', webpage,
-            'view_count', default=None)
-        average_rating = self._search_regex(
-            r'<(?:span|meta)[^>]+itemprop=(["\'])ratingValue\1[^>]*>(?P<rating_value>[0-9.]+)',
-            webpage, 'rating', fatal=False, group='rating_value')
+        formats = []
 
         info_dict = {
             'id': video_id,
-            'title': self._og_search_title(webpage),
-            'description': self._og_search_description(webpage),
-            'uploader': uploader,
-            'view_count': int_or_none(view_count),
-            'average_rating': float_or_none(average_rating),
-            'thumbnail': self._og_search_thumbnail(webpage),
+            'title': title,
             'formats': formats,
             'duration': None,
         }
 
         def extract_format(page, version):
-            json_str = self._search_regex(
-                r'player_data=(\\?["\'])(?P<player_data>.+?)\1', page,
-                '%s player_json' % version, fatal=False, group='player_data')
-            if not json_str:
-                return
-            player_data = self._parse_json(
-                json_str, '%s player_data' % version, fatal=False)
-            if not player_data:
-                return
-            video = player_data.get('video')
-            if not video or 'file' not in video:
-                self.report_warning('Unable to extract %s version information' % version)
+            unpacked = decode_packed_codes(page)
+            format_url = self._search_regex(
+                r"(?:file|url)\s*:\s*(\\?[\"'])(?P<url>http.+?)\1", unpacked,
+                '%s url' % version, fatal=False, group='url')
+            if not format_url:
                 return
             f = {
-                'url': video['file'],
+                'url': format_url,
             }
             m = re.search(
                 r'<a[^>]+data-quality="(?P<format_id>[^"]+)"[^>]+href="[^"]+"[^>]+class="[^"]*quality-btn-active[^"]*">(?P<height>[0-9]+)p',
@@ -109,7 +75,9 @@ class CDAIE(InfoExtractor):
                 })
             info_dict['formats'].append(f)
             if not info_dict['duration']:
-                info_dict['duration'] = parse_duration(video.get('duration'))
+                info_dict['duration'] = parse_duration(self._search_regex(
+                    r"duration\s*:\s*(\\?[\"'])(?P<duration>.+?)\1",
+                    unpacked, 'duration', fatal=False, group='duration'))
 
         extract_format(webpage, 'default')
 
@@ -117,8 +85,7 @@ class CDAIE(InfoExtractor):
                 r'<a[^>]+data-quality="[^"]+"[^>]+href="([^"]+)"[^>]+class="quality-btn"[^>]*>([0-9]+p)',
                 webpage):
             webpage = self._download_webpage(
-                self._BASE_URL + href, video_id,
-                'Downloading %s version information' % resolution, fatal=False)
+                href, video_id, 'Downloading %s version information' % resolution, fatal=False)
             if not webpage:
                 # Manually report warning because empty page is returned when
                 # invalid version is requested.

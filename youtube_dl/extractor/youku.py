@@ -16,6 +16,7 @@ from ..compat import (
 from ..utils import (
     ExtractorError,
     get_element_by_attribute,
+    sanitized_Request,
 )
 
 
@@ -217,10 +218,14 @@ class YoukuIE(InfoExtractor):
             headers = {
                 'Referer': req_url,
             }
-            headers.update(self.geo_verification_headers())
             self._set_cookie('youku.com', 'xreferrer', 'http://www.youku.com')
+            req = sanitized_Request(req_url, headers=headers)
 
-            raw_data = self._download_json(req_url, video_id, note=note, headers=headers)
+            cn_verification_proxy = self._downloader.params.get('cn_verification_proxy')
+            if cn_verification_proxy:
+                req.add_header('Ytdl-request-proxy', cn_verification_proxy)
+
+            raw_data = self._download_json(req, video_id, note=note)
 
             return raw_data['data']
 

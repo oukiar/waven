@@ -13,7 +13,6 @@ class XiamiBaseIE(InfoExtractor):
         webpage = super(XiamiBaseIE, self)._download_webpage(*args, **kwargs)
         if '>Xiami is currently not available in your country.<' in webpage:
             self.raise_geo_restricted('Xiami is currently not available in your country')
-        return webpage
 
     def _extract_track(self, track, track_id=None):
         title = track['title']

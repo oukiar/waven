@@ -1,6 +1,9 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
+import json
+import re
+
 from .common import InfoExtractor
 from ..utils import (
     clean_html,
@@ -27,14 +30,16 @@ class ClubicIE(InfoExtractor):
     }]
 
     def _real_extract(self, url):
-        video_id = self._match_id(url)
+        mobj = re.match(self._VALID_URL, url)
+        video_id = mobj.group('id')
 
         player_url = 'http://player.m6web.fr/v1/player/clubic/%s.html' % video_id
         player_page = self._download_webpage(player_url, video_id)
 
-        config = self._parse_json(self._search_regex(
+        config_json = self._search_regex(
             r'(?m)M6\.Player\.config\s*=\s*(\{.+?\});$', player_page,
-            'configuration'), video_id)
+            'configuration')
+        config = json.loads(config_json)
 
         video_info = config['videoInfo']
         sources = config['sources']

@@ -6,7 +6,6 @@ from .common import InfoExtractor
 from ..utils import (
     mimetype2ext,
     qualities,
-    remove_end,
 )
 
 
@@ -20,7 +19,7 @@ class ImdbIE(InfoExtractor):
         'info_dict': {
             'id': '2524815897',
             'ext': 'mp4',
-            'title': 'Ice Age: Continental Drift Trailer (No. 2)',
+            'title': 'Ice Age: Continental Drift Trailer (No. 2) - IMDb',
             'description': 'md5:9061c2219254e5d14e03c25c98e96a81',
         }
     }, {
@@ -84,17 +83,17 @@ class ImdbIE(InfoExtractor):
 
         return {
             'id': video_id,
-            'title': remove_end(self._og_search_title(webpage), ' - IMDb'),
+            'title': self._og_search_title(webpage),
             'formats': formats,
             'description': descr,
-            'thumbnail': format_info.get('slate'),
+            'thumbnail': format_info['slate'],
         }
 
 
 class ImdbListIE(InfoExtractor):
     IE_NAME = 'imdb:list'
     IE_DESC = 'Internet Movie Database lists'
-    _VALID_URL = r'https?://(?:www\.)?imdb\.com/list/(?P<id>[\da-zA-Z_-]{11})'
+    _VALID_URL = r'https?://www\.imdb\.com/list/(?P<id>[\da-zA-Z_-]{11})'
     _TEST = {
         'url': 'http://www.imdb.com/list/JFs9NWw6XI0',
         'info_dict': {

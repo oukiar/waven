@@ -1,28 +1,28 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
+import json
 import re
 import calendar
 import datetime
 
 from .common import InfoExtractor
-from ..compat import compat_str
 from ..utils import (
     HEADRequest,
     unified_strdate,
+    ExtractorError,
     strip_jsonp,
     int_or_none,
     float_or_none,
     determine_ext,
     remove_end,
-    unescapeHTML,
 )
 
 
 class ORFTVthekIE(InfoExtractor):
     IE_NAME = 'orf:tvthek'
     IE_DESC = 'ORF TVthek'
-    _VALID_URL = r'https?://tvthek\.orf\.at/(?:[^/]+/)+(?P<id>\d+)'
+    _VALID_URL = r'https?://tvthek\.orf\.at/(?:programs/.+?/episodes|topics?/.+?|program/[^/]+)/(?P<id>\d+)'
 
     _TESTS = [{
         'url': 'http://tvthek.orf.at/program/Aufgetischt/2745173/Aufgetischt-Mit-der-Steirischen-Tafelrunde/8891389',
@@ -40,34 +40,37 @@ class ORFTVthekIE(InfoExtractor):
         'skip': 'Blocked outside of Austria / Germany',
     }, {
         'url': 'http://tvthek.orf.at/topic/Im-Wandel-der-Zeit/8002126/Best-of-Ingrid-Thurnher/7982256',
-        'info_dict': {
-            'id': '7982259',
-            'ext': 'mp4',
-            'title': 'Best of Ingrid Thurnher',
-            'upload_date': '20140527',
-            'description': 'Viele Jahre war Ingrid Thurnher das "Gesicht" der ZIB 2. Vor ihrem Wechsel zur ZIB 2 im Jahr 1995 moderierte sie unter anderem "Land und Leute", "Österreich-Bild" und "Niederösterreich heute".',
-        },
-        'params': {
-            'skip_download': True,  # rtsp downloads
-        },
+        'playlist': [{
+            'md5': '68f543909aea49d621dfc7703a11cfaf',
+            'info_dict': {
+                'id': '7982259',
+                'ext': 'mp4',
+                'title': 'Best of Ingrid Thurnher',
+                'upload_date': '20140527',
+                'description': 'Viele Jahre war Ingrid Thurnher das "Gesicht" der ZIB 2. Vor ihrem Wechsel zur ZIB 2 im jahr 1995 moderierte sie unter anderem "Land und Leute", "Österreich-Bild" und "Niederösterreich heute".',
+            }
+        }],
         '_skip': 'Blocked outside of Austria / Germany',
-    }, {
-        'url': 'http://tvthek.orf.at/topic/Fluechtlingskrise/10463081/Heimat-Fremde-Heimat/13879132/Senioren-betreuen-Migrantenkinder/13879141',
-        'skip_download': True,
-    }, {
-        'url': 'http://tvthek.orf.at/profile/Universum/35429',
-        'skip_download': True,
     }]
 
     def _real_extract(self, url):
         playlist_id = self._match_id(url)
         webpage = self._download_webpage(url, playlist_id)
 
-        data_jsb = self._parse_json(
-            self._search_regex(
-                r'<div[^>]+class=(["\']).*?VideoPlaylist.*?\1[^>]+data-jsb=(["\'])(?P<json>.+?)\2',
-                webpage, 'playlist', group='json'),
-            playlist_id, transform_source=unescapeHTML)['playlist']['videos']
+        data_json = self._search_regex(
+            r'initializeAdworx\((.+?)\);\n', webpage, 'video info')
+        all_data = json.loads(data_json)
+
+        def get_segments(all_data):
+            for data in all_data:
+                if data['name'] in (
+                        'Tracker::EPISODE_DETAIL_PAGE_OVER_PROGRAM',
+                        'Tracker::EPISODE_DETAIL_PAGE_OVER_TOPIC'):
+                    return data['values']['segments']
+
+        sdata = get_segments(all_data)
+        if not sdata:
+            raise ExtractorError('Unable to extract segments')
 
         def quality_to_int(s):
             m = re.search('([0-9]+)', s)
@@ -76,11 +79,8 @@ class ORFTVthekIE(InfoExtractor):
             return int(m.group(1))
 
         entries = []
-        for sd in data_jsb:
-            video_id, title = sd.get('id'), sd.get('title')
-            if not video_id or not title:
-                continue
-            video_id = compat_str(video_id)
+        for sd in sdata:
+            video_id = sd['id']
             formats = [{
                 'preference': -10 if fd['delivery'] == 'hls' else None,
                 'format_id': '%s-%s-%s' % (
@@ -88,7 +88,7 @@ class ORFTVthekIE(InfoExtractor):
                 'url': fd['src'],
                 'protocol': fd['protocol'],
                 'quality': quality_to_int(fd['quality']),
-            } for fd in sd['sources']]
+            } for fd in sd['playlist_item_array']['sources']]
 
             # Check for geoblocking.
             # There is a property is_geoprotection, but that's always false
@@ -115,24 +115,14 @@ class ORFTVthekIE(InfoExtractor):
             self._check_formats(formats, video_id)
             self._sort_formats(formats)
 
-            subtitles = {}
-            for sub in sd.get('subtitles', []):
-                sub_src = sub.get('src')
-                if not sub_src:
-                    continue
-                subtitles.setdefault(sub.get('lang', 'de-AT'), []).append({
-                    'url': sub_src,
-                })
-
-            upload_date = unified_strdate(sd.get('created_date'))
+            upload_date = unified_strdate(sd['created_date'])
             entries.append({
                 '_type': 'video',
                 'id': video_id,
-                'title': title,
+                'title': sd['header'],
                 'formats': formats,
-                'subtitles': subtitles,
                 'description': sd.get('description'),
-                'duration': int_or_none(sd.get('duration_in_seconds')),
+                'duration': int(sd['duration_in_seconds']),
                 'upload_date': upload_date,
                 'thumbnail': sd.get('image_full_url'),
             })
@@ -147,16 +137,13 @@ class ORFTVthekIE(InfoExtractor):
 class ORFOE1IE(InfoExtractor):
     IE_NAME = 'orf:oe1'
     IE_DESC = 'Radio Österreich 1'
-    _VALID_URL = r'https?://oe1\.orf\.at/(?:programm/|konsole\?.*?\btrack_id=)(?P<id>[0-9]+)'
+    _VALID_URL = r'https?://oe1\.orf\.at/(?:programm/|konsole.*?#\?track_id=)(?P<id>[0-9]+)'
 
     # Audios on ORF radio are only available for 7 days, so we can't add tests.
-    _TESTS = [{
+    _TEST = {
         'url': 'http://oe1.orf.at/konsole?show=on_demand#?track_id=394211',
         'only_matching': True,
-    }, {
-        'url': 'http://oe1.orf.at/konsole?show=ondemand&track_id=443608&load_day=/programm/konsole/tag/20160726',
-        'only_matching': True,
-    }]
+    }
 
     def _real_extract(self, url):
         show_id = self._match_id(url)
