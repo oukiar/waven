@@ -47,7 +47,7 @@ requirements = pyjnius, lxml, pil, ffmpeg, plyer, netifaces, openssl, sqlite3, k
 #garden_requirements =
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = %(source.dir)s/icon.png
 
 # (str) Icon of the application
 icon.filename = %(source.dir)s/icon.png

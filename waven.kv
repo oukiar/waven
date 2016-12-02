@@ -242,36 +242,23 @@
         
         AnchorLayout:
             size_hint_y: None
-            height: 50
+            height: 40
                 
             BoxLayout:
-                size_hint_x: None
-                width: 400
                 
                 TextInput:
                     id: searchtext
                     hint_text: "Enter your search keywords"
-                    font_size: 25
+                    font_size: 20
                     on_text_validate: root.on_search()
                     multiline: False
                 
                 Button:
                     text: "Search"
                     size_hint_x: None
+                    width: 70
                     on_release: root.on_search()
-                                
-                Button:
-                    size_hint_x: None
-                    width: 48
-                    background_normal: "images/formatvideo_down.png"
-                    background_down: "images/formatvideo.png"
-                    on_release: root.show_formats()
-                    
-                Button:
-                    size_hint: (None,None)
-                    size: 40, 30
-                    text: "URL"
-                    on_release: root.open_downloadbyURL()
+                                                    
 
         ScrollBox:
             orientation: "vertical"
@@ -283,22 +270,25 @@
                 
         BoxLayout:
             size_hint_y: None
-            height: 128
+            height: 96
             Button:
                 size_hint_x: None
-                width: 128
+                width: 96
                 background_normal: "images/back.png"
                 background_down: "images/back_down.png"
                 on_release: root.dismiss()
+            
             AnchorLayout:
                 Button:
-                    size_hint: None, None
-                    size: 100,60
-                    text: "Search more"
+                    size_hint_x: None
+                    height: 96
+                    background_normal: "images/url.png"
+                    background_down: "images/url_down.png"
+                    on_release: root.open_downloadbyURL()
             
             RelativeLayout:
                 size_hint_x: None
-                width: 128
+                width: 96
                 Button:
                     background_normal: "images/downloads.png"
                     background_down: "images/downloads_down.png"
@@ -449,13 +439,13 @@
                                                 
                 RelativeLayout:   
                     size_hint_y: None
-                    height: 128
+                    height: 96
                 
                     AnchorLayout:
                         anchor_x: "left"
                         Button:
                             size_hint_x: None
-                            width: 128
+                            width: 96
                             background_normal: "images/back.png"
                             background_down: "images/back_down.png"
                             on_release: app.root.show_playlists()
@@ -464,7 +454,7 @@
                         anchor_x: "center"
                         Button:
                             size_hint_x: None
-                            width: 128
+                            width: 96
                             background_normal: "images/search.png"
                             background_down: "images/search_down.png"
                             on_release: root.add_songs()
@@ -475,13 +465,13 @@
                               
                         ImageButton:
                             size_hint_x: None
-                            width: 128 
+                            width: 96 
                             source: "images/circleplay.png"
                             on_release: root.show_playing()
                             
                         RotativeImage:
                             size_hint_x: None
-                            width: 128 
+                            width: 96 
                             source: "images/circle3.png"
                             state: "rotating"
                             id: circle

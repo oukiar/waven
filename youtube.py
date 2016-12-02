@@ -2,6 +2,8 @@
 #this import was neccesary when we enable the url downloading (like for xvideos)
 from __future__ import unicode_literals
 
+from kivy.utils import platform
+
 from kivy.clock import Clock
 
 from threading import Thread
@@ -69,7 +71,7 @@ class YoutubeDownload(Thread):
 
         if self.originaltitle:
             #   OPCIONES DESCARGA YOUTUBE
-            ydl_opts = {#"format":"18", #comentado desde que se habilito la descarga por url
+            ydl_opts = {#"format":"18", #comentado desde que se habilito la descarga por url, debido a que original title se usa cuando se descarga por URL
                 "progress_hooks":[self.item.setProgress],
                 "no_color": True,
                 "nopart": True,
@@ -79,15 +81,27 @@ class YoutubeDownload(Thread):
                     }
 
         else:            
-            #   OPCIONES DESCARGA YOUTUBE
-            ydl_opts = {"format":"18", #comentado desde que se habilito la descarga por url
-                "progress_hooks":[self.item.setProgress],
-                "no_color": True,
-                "nopart": True,
-                "outtmpl": dest,
-                "quiet": True,
-                "downloads": self.downloadpath
-                    }
+            if platform == "android":
+
+                #   OPCIONES DESCARGA YOUTUBE
+                ydl_opts = {"format":"18", #comentado desde que se habilito la descarga por url
+                    "progress_hooks":[self.item.setProgress],
+                    "no_color": True,
+                    "nopart": True,
+                    "outtmpl": dest,
+                    "quiet": True,
+                    "downloads": self.downloadpath
+                        }
+            else:
+                #   OPCIONES DESCARGA YOUTUBE
+                ydl_opts = {"format":"18", #comentado desde que se habilito la descarga por url
+                    "progress_hooks":[self.item.setProgress],
+                    "no_color": True,
+                    "nopart": True,
+                    "outtmpl": dest,
+                    "quiet": True,
+                    "downloads": self.downloadpath
+                        }
                         
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             filename = ydl.download([self.url])
