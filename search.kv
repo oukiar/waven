@@ -1,0 +1,26 @@
+
+
+<Search>:
+    orientation: "vertical"
+    padding: 10
+    
+    searchtext:searchtext
+    
+    BoxLayout:
+        size_hint_y: None
+        height: 40
+        TextInput:
+            id: searchtext
+            hint_text: "Enter your search keywords"
+            font_size: 20
+            on_text_validate: root.on_search()
+            multiline: False
+        
+        Button:
+            text: "Search"
+            size_hint_x: None
+            width: 70
+            on_release: root.on_search()
+
+    ScrollBox:
+        orientation: "vertical"

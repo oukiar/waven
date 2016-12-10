@@ -2,143 +2,6 @@
 #:import ScrollBox devslib.scrollbox
 #:include devslib/utils.kv
 
-<ModalAddPlaylist>:
-    size_hint: (None, None)
-    size: (350,280)
-    title: "Create playlist"
-    txt_title: txt_title
-    BoxLayout:
-        orientation: "vertical"
-        padding: (40, 50)
-        spacing: 10
-        
-        TextInput:
-            id: txt_title
-            hint_text: "Title"
-            font_size: 22
-            multiline: False
-            on_text_validate: root.create_playlist()
-        
-        Button:
-            text: "OK"
-            on_release: root.create_playlist()
-        
-<PlayListItem@BoxLayout>:
-	title:title
-	
-	size_hint_y: None
-    height: "10mm"
-    
- 
-    canvas:
-        Color:
-            rgba: 1, 1, 1, 1
-        Rectangle:
-            size: self.size
-            pos: self.pos
-
-    padding: 1
-	
-	ToggleButton:
-		group: "playlistitem"
-		id: title
-        font_size:23
-        background_color: 0.0,0.0,0.0,1
-        on_release: root.update_tracklist()
-    
-        background_normal: ""
-
-<Playlists>:
-	items:items
-    orientation: "vertical"
-    spacing: 1
-    AnchorLayout:
-        size_hint_y: None
-        height: 128
-        BoxLayout:
-            size_hint_x: None
-            width: 300
-        
-        
-            Button:
-                size_hint_x: None
-                background_normal: "images/prev.png"
-                background_down: "images/prev_down.png"
-        
-            AnchorLayout:
-                      
-                ImageButton:
-                    source: "images/circlepause.png"
-                    #on_release: root.playpause(self)
-                    
-                RotativeImage:
-                    source: "images/circle3.png"
-                    #state: "rotating"
-                    id: circle
-                    
-            Button:
-                size_hint_x: None
-                background_normal: "images/next.png"
-                background_down: "images/next_down.png"
-                #on_release: root.video.state = "stop"
-            
-            
-    ScrollBox:
-		id: items
-        orientation: "vertical"
-        bar_color: 0.89,0.559,0.270,1
-        bar_inactive_color: 0.180,0.537,0.619,1
-        scroll_distance: 100
-        scroll_timeout: 400
-        spacing: 5
-        padding: 10
-            
-    BoxLayout:
-        size_hint_y: None
-        height: 60
-        Button:
-            text: "+"
-            on_release: root.open_addplaylist()
-        Button:
-            text: "Menu"
-            on_release: root.show_menu()
-        Button:
-            text: "Playing"
-            on_release: app.root.show_playing()
-
-<SongItem>:
-    title:title
-    height: 64
-    
-    BoxLayout:        
-        canvas:
-            Color:
-                rgba: 1, 1, 1, 1
-            Rectangle:
-                size: self.size
-                pos: self.pos
-    
-        padding: 1
-    
-        Button:
-            id: title
-            text: "Name of the song"
-            background_normal: ""
-            background_color: 0,0,0,1
-            on_release: root.do_play()
-            #text_size: (self.width, None)
-            text_size: self.width-50, None
-            size: self.texture_size
-            font_size: 18
-            
-    Button:
-        background_normal: "images/playnext_64.png"
-        background_down: "images/playnext_down_64.png"
-        width: 64
-        size_hint_x: None
-        on_release: root.do_playnext()
-
-
 
 <ResultItem>:
     preview:preview
@@ -333,24 +196,6 @@
                 text: "OK"
                 on_release: root.do_download()
 
-<ModalPlaylistEdit>:
-    title: "New playlist name"
-    size_hint: None, None
-    size: 300,200
-    
-    txt_newname: txt_newname
-    
-    BoxLayout:
-        orientation: "vertical"
-        TextInput:
-            text: ""
-            id: txt_newname
-            hint_text: "New playlist name"
-            
-        Button:
-            text: "Save"
-            on_release: root.do_save()
-
 <PlaylistMenu>:
     size_hint: None,None
     size: (200,400)
@@ -380,13 +225,14 @@
     screens:screens
 
 	playlists:playlists
-	songs:songs
+    songs:songs
+	playlistsongs:playlistsongs
+    search:search
 	playing:playing
     txt_playing:txt_playing
     circle:circle
     video:video
     durationcounter:durationcounter
-    playlisttitle:playlisttitle
     queuecounter:queuecounter
     videoprogress:videoprogress
     btn_maximize:btn_maximize
@@ -399,229 +245,212 @@
             size: self.size
             pos: self.pos
 
+    BoxLayout:
+        orientation: "vertical"
     
-    ScreenManager:
-        id: screens
+        ScrollBox:
+            size_hint_y: None
+            height: 40
+            
+            ToggleButton:
+                text: "Playlists"
+                background_normal: "images/bgtab.png"
+                background_down: "images/bgtab_down.png"
+                group: "toptabs"
+                font_size: 20
+                state: "down"
+                on_state: if args[1] == "down": root.show_playlists()
+            ToggleButton:
+                text: "Canciones"
+                background_normal: "images/bgtab.png"
+                background_down: "images/bgtab_down.png"
+                group: "toptabs"
+                font_size: 20
+            ToggleButton:
+                text: "Buscar"
+                background_normal: "images/bgtab.png"
+                background_down: "images/bgtab_down.png"
+                group: "toptabs"
+                font_size: 20
+                on_state: if args[1] == "down": root.show_search()
+            ToggleButton:
+                text: "Reproductor"
+                background_normal: "images/bgtab.png"
+                background_down: "images/bgtab_down.png"
+                group: "toptabs"
+                font_size: 20
+                width: 120
+                size_hint_x: None
+                on_state: if args[1] == "down": root.show_playing()
         
-        Screen:
-            name: "playlists"
-            Playlists:
-				id: playlists
-        Screen:
-            name: "songs"
+        ScreenManager:
+            id: screens
             
-            BoxLayout:
-                orientation: "vertical"
-                BoxLayout:
-                    size_hint_y: None
-                    height: 128
-                    Label:
-                        id: playlisttitle
-                        text: "Playlist"
-                        font_size: 30
-                        #color: 0,0,0,1
-                    AnchorLayout:
-                        size_hint_x: None
-                        width: 128
-                        Button:
-                            background_normal: "images/menu.png"
-                            background_down: "images/menu_down.png"
-                            size_hint: None, None
-                            size: 64, 64
-                            on_release: root.show_playlist_menu()
-                ScrollBox:
+            Screen:
+                name: "playlists"
+                Playlists:
+                    id: playlists
+            Screen:
+                name: "playlistsongs"
+                PlaylistSongs:
+                    id: playlistsongs
+                    
+            Screen:
+                name: "songs"
+                Songs:
                     id: songs
-                    scroll_distance: 100
-                    bar_color: 0.180,0.537,0.619,1
-                    bar_inactive_color: 0.89,0.559,0.270,1
-                    orientation: "vertical"
-                    spacing: 3
-                                                
-                RelativeLayout:   
-                    size_hint_y: None
-                    height: 96
-                
-                    AnchorLayout:
-                        anchor_x: "left"
-                        Button:
-                            size_hint_x: None
-                            width: 96
-                            background_normal: "images/back.png"
-                            background_down: "images/back_down.png"
-                            on_release: app.root.show_playlists()
-                            
-                    AnchorLayout:
-                        anchor_x: "center"
-                        Button:
-                            size_hint_x: None
-                            width: 96
-                            background_normal: "images/search.png"
-                            background_down: "images/search_down.png"
-                            on_release: root.add_songs()
-                            
-                            
-                    AnchorLayout:
-                        anchor_x: "right" 
-                              
-                        ImageButton:
-                            size_hint_x: None
-                            width: 96 
-                            source: "images/circleplay.png"
-                            on_release: root.show_playing()
-                            
-                        RotativeImage:
-                            size_hint_x: None
-                            width: 96 
-                            source: "images/circle3.png"
-                            state: "rotating"
-                            id: circle
-                            
-
-        Screen:
-            name: "playing"
-            
-            canvas:
-                Color:
-                    rgba: 0.0, 0.0, 0.0, 1
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
-            
-            BoxLayout:
-                spacing: 5
-                id: playing
-                orientation: "vertical"
-                
-                Label:
-                    size_hint_y: None
-                    height: 40
-                    font_size: 26
-                    text: "Now Playing"
-                    color: 0.89,0.559,0.270,1
                     
+            Screen:
+                name: "search"
+                Search:
+                    id: search
+                                
+
+            Screen:
+                name: "playing"
+                
+                canvas:
+                    Color:
+                        rgba: 0.0, 0.0, 0.0, 1
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
                 
                 BoxLayout:
-                    size_hint_y: None
-                    height: 60
-                    padding_x: 10
+                    spacing: 5
+                    id: playing
+                    orientation: "vertical"
                     
                     Label:
-                        font_size: 22
-                        id: txt_playing
-                        text: ""
-                        halign: "left"
-                        text_size: self.width-10, None
-                        size: self.texture_size
+                        size_hint_y: None
+                        height: 40
+                        font_size: 26
+                        text: "Now Playing"
+                        color: 0.89,0.559,0.270,1
                         
-                    Label:
-                        id: durationcounter
-                        size_hint_x: None
-                        font_size: 30
-                        text: "00:00"
-                        #color: 0.89,0.559,0.270,1
-                        halign: "right"
-                    
-                RelativeLayout:
-                    
-                    Video:
-                        id: video
-                        on_state: root.on_video_state(args[1])
-                        on_loaded: root.on_videoloaded()
-                        on_position: root.update_time(args[1])
-                        on_touch_down: root.show_maximize()
-                        
-                    Button:
-                        id: btn_maximize
-                        opacity: 0
-                        size_hint: None, None
-                        size: 64, 64
-                        pos_hint: {'x':.8, 'y':.8}
-                        background_normal: "images/maximize_64.png"
-                        background_down: "images/maximize_64_down.png"
-                    
-                AnchorLayout:
-                    size_hint_y: None
-                    height: 40
-                    Slider:
-                        id: videoprogress
-                        size_hint_x: .8
-                        on_value: root.seek_playing(args[1])
-                    
-                AnchorLayout:
-                    size_hint_y: None
-                    height: 100
                     
                     BoxLayout:
-                        size_hint_x: None
-                        width: 300
+                        size_hint_y: None
+                        height: 60
+                        padding_x: 10
                         
-                        Button:
-                            size_hint_x: None
-                            background_normal: "images/prev.png"
-                            background_down: "images/prev_down.png"
-                    
-                        AnchorLayout:
-                                  
-                            ImageButton:
-                                source: "images/circlepause.png"
-                                on_release: root.playpause(self)
-                                
-                            RotativeImage:
-                                source: "images/circle3.png"
-                                #state: "rotating"
-                                id: circle
-                                
-                        Button:
-                            size_hint_x: None
-                            background_normal: "images/next.png"
-                            background_down: "images/next_down.png"
-                            on_release: root.video.state = "stop"
-                    
-                AnchorLayout:
-                    size_hint_y: None
-                    height: 40
-                    anchor_x: "center"
-                    Slider:
-                        size_hint_x: None
-                        width: 150
-                        id: volumen
-                        on_value: root.set_volume(args[1])
-                        max: 1.0
-                        
-                    
-                RelativeLayout:   
-                    size_hint_y: None
-                    height: 128
-                
-                    AnchorLayout:
-                        anchor_x: "left"
-                        Button:
-                            size_hint_x: None
-                            width: 128
-                            background_normal: "images/back.png"
-                            background_down: "images/back_down.png"
-                            on_release: root.show_songs(direction="right")
-                            
-                            
-                    AnchorLayout:     
-                        anchor_x: "right"                        
-                        anchor_y: "bottom"                        
-                        Button:
-                            size_hint_x: None
-                            width: 128
-                            background_normal: "images/queue.png"
-                            background_down: "images/queue_down.png"
+                        Label:
+                            font_size: 22
+                            id: txt_playing
+                            text: ""
+                            halign: "left"
+                            text_size: self.width-10, None
+                            size: self.texture_size
                             
                         Label:
-                            id: queuecounter
+                            id: durationcounter
                             size_hint_x: None
-                            width: 100
-                            size_hint_y: None
-                            height: 105
-                            color: (1,0,0,1)
-                            text: "0"
+                            font_size: 30
+                            text: "00:00"
+                            #color: 0.89,0.559,0.270,1
+                            halign: "right"
+                        
+                    RelativeLayout:
+                        
+                        Video:
+                            id: video
+                            on_state: root.on_video_state(args[1])
+                            on_loaded: root.on_videoloaded()
+                            on_position: root.update_time(args[1])
+                            on_touch_down: root.show_maximize()
+                            
+                        Button:
+                            id: btn_maximize
+                            opacity: 0
+                            size_hint: None, None
+                            size: 64, 64
+                            pos_hint: {'x':.8, 'y':.8}
+                            background_normal: "images/maximize_64.png"
+                            background_down: "images/maximize_64_down.png"
+                        
+                    AnchorLayout:
+                        size_hint_y: None
+                        height: 40
+                        Slider:
+                            id: videoprogress
+                            size_hint_x: .8
+                            on_value: root.seek_playing(args[1])
+                        
+                    AnchorLayout:
+                        size_hint_y: None
+                        height: 100
+                        
+                        BoxLayout:
+                            size_hint_x: None
+                            width: 300
+                            
+                            Button:
+                                size_hint_x: None
+                                background_normal: "images/prev.png"
+                                background_down: "images/prev_down.png"
+                        
+                            AnchorLayout:
+                                      
+                                ImageButton:
+                                    source: "images/circlepause.png"
+                                    on_release: root.playpause(self)
+                                    
+                                RotativeImage:
+                                    source: "images/circle3.png"
+                                    #state: "rotating"
+                                    id: circle
+                                    
+                            Button:
+                                size_hint_x: None
+                                background_normal: "images/next.png"
+                                background_down: "images/next_down.png"
+                                on_release: root.video.state = "stop"
+                        
+                    AnchorLayout:
+                        size_hint_y: None
+                        height: 40
+                        anchor_x: "center"
+                        Slider:
+                            size_hint_x: None
+                            width: 150
+                            id: volumen
+                            on_value: root.set_volume(args[1])
+                            max: 1.0
+                            
+                        
+                    RelativeLayout:   
+                        size_hint_y: None
+                        height: 96
                     
-                
+                        AnchorLayout:
+                            anchor_x: "left"
+                            Button:
+                                size_hint_x: None
+                                width: 96
+                                background_normal: "images/back.png"
+                                background_down: "images/back_down.png"
+                                on_release: root.show_songs(direction="right")
+                                
+                                
+                        AnchorLayout:     
+                            anchor_x: "right"                        
+                            anchor_y: "bottom"                        
+                            Button:
+                                size_hint_x: None
+                                width: 96
+                                background_normal: "images/queue.png"
+                                background_down: "images/queue_down.png"
+                                
+                            Label:
+                                id: queuecounter
+                                size_hint_x: None
+                                width: 96
+                                size_hint_y: None
+                                height: 96
+                                color: (1,0,0,1)
+                                text: "0"
+                        
+                    
 
 <Desktop>:
 

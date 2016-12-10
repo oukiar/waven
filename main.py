@@ -3,6 +3,9 @@
 
 from kivy.app import App
 
+from kivy.config import Config
+Config.set('kivy', 'window_icon', 'icon.png')
+
 try:
     import devslib.cloud as cloud
 except:
@@ -14,8 +17,9 @@ except:
 from waven import Waven
 
 class WavenApp(App):
+    #icon = 'icon.png'
     def build(self):   
-        self.icon = 'icon.png'     
+        #self.icon = './icon.png'
         return Waven()
     
     def on_start(self):

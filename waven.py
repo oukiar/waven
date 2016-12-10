@@ -63,9 +63,10 @@ from functools import partial
 import sys
 
 #project imports
-from playlists import Playlists, PlaylistMenu
+from playlists import Playlists, PlaylistMenu, PlaylistSongs, PlaylistSongItem
 from modalsearch import ModalSearch, ModalDownloads
-from song import SongItem
+from songs import SongItem, Songs
+from search import Search
 
 class Waven(RelativeLayout):
 
@@ -186,7 +187,7 @@ class Waven(RelativeLayout):
                     self.circle.state = "stopped"
                 
                 '''
-                for i in self.songs.layout.children:
+                for i in self.playlistsongs.items.layout.children:
                     print(i.title.text)
                 '''
             
@@ -260,10 +261,19 @@ class Waven(RelativeLayout):
         App.get_running_app().root.screens.transition.direction = "left"
         App.get_running_app().root.screens.current = "playing"
         
+    def show_search(self):
+        App.get_running_app().root.screens.transition.direction = "left"
+        App.get_running_app().root.screens.current = "search"
+        
     def show_songs(self, direction="left"):
         
         self.screens.transition.direction = direction
         self.screens.current = "songs"
+        
+    def show_playlistsongs(self, direction="left"):
+        
+        self.screens.transition.direction = direction
+        self.screens.current = "playlistsongs"
         
     def update_tracklist(self):
         
@@ -274,20 +284,20 @@ class Waven(RelativeLayout):
         result = query.find()
         
         
-        self.songs.clear()
+        self.playlistsongs.items.clear()
         
         for i in result:
-            item = SongItem()
+            item = PlaylistSongItem()
             item.title.text = i.Title
             item.song_id = i.objectId
             item.song_object = i
-            self.songs.add_widget(item)
+            self.playlistsongs.items.add_widget(item)
             
         #title of the playlist at the top of songs
-        self.playlisttitle.text = self.current_playlist.Title
+        self.playlistsongs.playlisttitle.text = self.current_playlist.Title
             
         #show songs screen
-        self.show_songs()
+        self.show_playlistsongs()
         
     def set_volume(self, vol):
         #print(vol)

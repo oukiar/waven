@@ -1,0 +1,200 @@
+
+#:import ScrollBox devslib.scrollbox
+
+<ModalAddPlaylist>:
+    size_hint: (None, None)
+    size: (350,280)
+    title: "Create playlist"
+    txt_title: txt_title
+    BoxLayout:
+        orientation: "vertical"
+        padding: (40, 50)
+        spacing: 10
+        
+        TextInput:
+            id: txt_title
+            hint_text: "Title"
+            font_size: 22
+            multiline: False
+            on_text_validate: root.create_playlist()
+        
+        Button:
+            text: "OK"
+            on_release: root.create_playlist()
+        
+
+<ModalPlaylistEdit>:
+    title: "New playlist name"
+    size_hint: None, None
+    size: 300,200
+    
+    txt_newname: txt_newname
+    
+    BoxLayout:
+        orientation: "vertical"
+        TextInput:
+            text: ""
+            id: txt_newname
+            hint_text: "New playlist name"
+            
+        Button:
+            text: "Save"
+            on_release: root.do_save()
+
+        
+<PlayListItem>:
+	title:title
+	
+	size_hint_y: None
+    height: "10mm"
+    
+ 
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    padding: 1
+	
+	ToggleButton:
+		group: "playlistitem"
+		id: title
+        font_size:23
+        background_color: 0.0,0.0,0.0,1
+        on_release: root.update_tracklist()
+    
+        background_normal: ""
+
+<Playlists>:
+	items:items
+    orientation: "vertical"
+    spacing: 1
+    padding: 10
+            
+    AnchorLayout:
+        size_hint_y: None
+        height: 96
+        
+        Button:
+            #text: "+"
+            on_release: root.open_addplaylist()
+            background_normal: "images/addplaylist.png"
+            background_down: "images/addplaylist_down.png"
+            size_hint_x: None
+            width: 96
+            
+    ScrollBox:
+		id: items
+        orientation: "vertical"
+        bar_color: 0.89,0.559,0.270,1
+        bar_inactive_color: 0.180,0.537,0.619,1
+        scroll_distance: 100
+        scroll_timeout: 400
+        spacing: 5
+        padding: 10
+        
+
+<PlaylistSongItem>:
+    title:title
+    height: 64
+    
+    BoxLayout:        
+        canvas:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+    
+        padding: 1
+    
+        Button:
+            id: title
+            text: "Name of the song"
+            background_normal: ""
+            background_color: 0,0,0,1
+            on_release: root.do_play()
+            #text_size: (self.width, None)
+            text_size: self.width-50, None
+            size: self.texture_size
+            font_size: 18
+            
+    Button:
+        background_normal: "images/playnext_64.png"
+        background_down: "images/playnext_down_64.png"
+        width: 64
+        size_hint_x: None
+        on_release: root.do_playnext()
+
+<PlaylistSongs>:
+    orientation: "vertical"
+    padding: 10
+    playlisttitle:playlisttitle
+    items:items
+    
+    BoxLayout:
+        size_hint_y: None
+        height: 128
+        Label:
+            id: playlisttitle
+            text: "Playlist"
+            font_size: 30
+            #color: 0,0,0,1
+        AnchorLayout:
+            size_hint_x: None
+            width: 128
+            Button:
+                background_normal: "images/menu.png"
+                background_down: "images/menu_down.png"
+                size_hint: None, None
+                size: 64, 64
+                on_release: root.show_playlist_menu()
+    ScrollBox:
+        id: items
+        scroll_distance: 100
+        bar_color: 0.180,0.537,0.619,1
+        bar_inactive_color: 0.89,0.559,0.270,1
+        orientation: "vertical"
+        spacing: 3
+                                    
+    RelativeLayout:   
+        size_hint_y: None
+        height: 96
+    
+        AnchorLayout:
+            anchor_x: "left"
+            Button:
+                size_hint_x: None
+                width: 96
+                background_normal: "images/back.png"
+                background_down: "images/back_down.png"
+                on_release: app.root.show_playlists()
+                
+        AnchorLayout:
+            anchor_x: "center"
+            Button:
+                size_hint_x: None
+                width: 96
+                background_normal: "images/search.png"
+                background_down: "images/search_down.png"
+                on_release: app.root.add_songs()
+                
+                
+        AnchorLayout:
+            anchor_x: "right" 
+                  
+            ImageButton:
+                size_hint_x: None
+                width: 96 
+                source: "images/circleplay.png"
+                on_release: root.show_playing()
+                
+            RotativeImage:
+                size_hint_x: None
+                width: 96 
+                source: "images/circle3.png"
+                state: "rotating"
+                id: circle
+
