@@ -266,6 +266,7 @@
                 background_down: "images/bgtab_down.png"
                 group: "toptabs"
                 font_size: 20
+                on_state: if args[1] == "down": root.show_songs()
             ToggleButton:
                 text: "Buscar"
                 background_normal: "images/bgtab.png"

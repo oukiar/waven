@@ -84,6 +84,8 @@ class Waven(RelativeLayout):
         self.modalsearch = ModalSearch()
         self.modaldownloads = ModalDownloads()
         
+        self.songs.update_songs()
+        
         if platform == 'android':
             self.downloadpath = "/mnt/sdcard/ACTUALIZACION/Descargas"
         elif platform == 'linux' or platform == 'win' or platform == 'macosx':
