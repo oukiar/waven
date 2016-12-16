@@ -88,6 +88,14 @@ class Waven(RelativeLayout):
         
         if platform == 'android':
             self.downloadpath = "/mnt/sdcard/ACTUALIZACION/Descargas"
+            
+            if not os.path.exists("/mnt/sdcard/ACTUALIZACION"):
+                os.mkdir("/mnt/sdcard/ACTUALIZACION")
+                
+                if not os.path.exists("/mnt/sdcard/ACTUALIZACION/Descargas"):
+                    os.mkdir("/mnt/sdcard/ACTUALIZACION/Descargas")
+                
+            
         elif platform == 'linux' or platform == 'win' or platform == 'macosx':
             self.downloadpath = "downloads"
 
