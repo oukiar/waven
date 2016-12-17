@@ -43,6 +43,8 @@ from kivy.clock import Clock
 
 from kivy.app import App
 
+from kivy.core.audio import SoundLoader
+
 from kivy.utils import platform
 
 import os
@@ -222,12 +224,35 @@ class Waven(RelativeLayout):
                 
         self.circle.state = "rotating"
          
+        name, ext = os.path.splitext(filename)
+                 
         try:
-            self.video.source = filename.encode('utf8')
+            if ext.lower() in [".mp4"]:
+                self.video.source = filename.encode('utf8')
+                self.video.state = "play"
+            else:
+                self.audio = SoundLoader.load(filename.encode('utf8'))
+                self.audio.bind(on_stop=self.stop_sound)
+                self.audio.play()
+                Clock.schedule_interval(self.update_time_sound, .2)
         except:
-            self.video.source = filename
+            if ext.lower() in [".mp4"]:
+                self.video.source = filename
+                self.video.state = "play"
+            else:
+                self.audio = SoundLoader.load(filename)
+                self.audio.bind(on_stop=self.stop_sound)
+                self.audio.play()
+                Clock.schedule_interval(self.update_time_sound, .2)
         
-        self.video.state = "play"
+        
+    def update_time_sound(self, dt):
+        pos = self.audio.get_pos()
+        #print("TIME: " + str(pos))
+        self.update_time(self.audio.length - pos)
+        
+    def stop_sound(self, w):
+        Clock.unschedule(self.update_time_sound)
         
     def on_videoloaded(self):
         self.update_time(0)
@@ -248,8 +273,10 @@ class Waven(RelativeLayout):
         #self.video.position = val
         
         #saltos solo mayores a 2 segundos
-        if (self.video.position - val) < -2 or (self.video.position - val) > 2:
-            self.video.seek(val / self.video.duration)
+        if self.video.state == "play":
+            if (self.video.position - val) < -2 or (self.video.position - val) > 2:
+                self.video.seek(val / self.video.duration)
+        
         
     def playpause(self, img):
         print("Play pause: " + img.source)

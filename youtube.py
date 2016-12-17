@@ -63,7 +63,7 @@ class YoutubeDownload(Thread):
             dest = os.path.join(app.root.repertory, app.root.currentgenre, app.root.currentalbum, self.filename + ".mp4")
         '''
         
-        dest = self.filename + ".mp4"
+        
         
         #si no existe el directorio destino, crearlo
         if not os.path.isdir(self.downloadpath):
@@ -83,8 +83,10 @@ class YoutubeDownload(Thread):
         else:            
             if platform == "android":
 
+                dest = self.filename + ".m4a"
+
                 #   OPCIONES DESCARGA YOUTUBE
-                ydl_opts = {"format":"18", #comentado desde que se habilito la descarga por url
+                ydl_opts = {"format":"140", #comentado desde que se habilito la descarga por url
                     "progress_hooks":[self.item.setProgress],
                     "no_color": True,
                     "nopart": True,
@@ -93,6 +95,8 @@ class YoutubeDownload(Thread):
                     "downloads": self.downloadpath
                         }
             else:
+                dest = self.filename + ".mp4"
+                
                 #   OPCIONES DESCARGA YOUTUBE
                 ydl_opts = {"format":"18", #comentado desde que se habilito la descarga por url
                     "progress_hooks":[self.item.setProgress],
