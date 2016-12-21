@@ -78,7 +78,7 @@ class Waven(RelativeLayout):
         #self.bgcolor = (.2109375, .23828125, .27734375, 1)
         
         #configuracion general de color
-        self.set_background_color("#1c2c2b")
+        self.set_background_color("#242424")
         self.set_foreground_color("#363d47") #in progress
         
         super(Waven, self).__init__(**kwargs)
@@ -89,7 +89,6 @@ class Waven(RelativeLayout):
 
         cloud.init("playlists.db")
 
-        self.playlists.update_view()
 
         self.modalsearch = ModalSearch()
         self.modaldownloads = ModalDownloads()
@@ -109,6 +108,7 @@ class Waven(RelativeLayout):
         elif platform == 'linux' or platform == 'win' or platform == 'macosx':
             self.downloadpath = "downloads"
             
+        Clock.schedule_once(self.initialization, 0)
 
         return
         
@@ -120,6 +120,10 @@ class Waven(RelativeLayout):
             self.configuration = {"paths":["data_repository"]}
             #save configuration
             open("configuration.json", "w+").write(json.dumps(self.configuration) )
+            
+    def initialization(self, dt):
+        
+        self.playlists.update_view()
             
     def set_background_color(self, color):
         '''
