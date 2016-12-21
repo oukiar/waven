@@ -79,7 +79,7 @@ class Waven(RelativeLayout):
         
         #configuracion general de color
         self.set_background_color("#111719")
-        self.set_foreground_color("#363d47") #in progress
+        self.set_foreground_color("#444444") #in progress
         
         super(Waven, self).__init__(**kwargs)
         
