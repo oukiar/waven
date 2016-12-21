@@ -78,7 +78,7 @@ class Waven(RelativeLayout):
         #self.bgcolor = (.2109375, .23828125, .27734375, 1)
         
         #configuracion general de color
-        self.set_background_color("#242424")
+        self.set_background_color("#111719")
         self.set_foreground_color("#363d47") #in progress
         
         super(Waven, self).__init__(**kwargs)
