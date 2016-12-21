@@ -72,6 +72,10 @@ class Playlists(BoxLayout):
             
             item = PlayListItem()
             item.title.text = i.Title
+            
+            #experimental, ugly
+            #item.background_color = App.get_running_app().root.fgcolor
+            
             item.playlist_object = i   #the object playlist is stored in the button object as a reference for future operations
             self.items.add_widget(item)
     

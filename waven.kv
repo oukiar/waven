@@ -239,10 +239,11 @@
     btn_maximize:btn_maximize
     volumen:volumen
     
+    
     canvas:
         Color:
             #rgba: .2109375, .23828125, .27734375, 1
-            rgba: .109375, .171875, .16796875, 1
+            rgba: self.bgcolor
         Rectangle:
             size: self.size
             pos: self.pos
@@ -315,7 +316,7 @@
                 canvas:
                     Color:
                         #rgba: .2109375, .23828125, .27734375, 1
-                        rgba: .109375, .171875, .16796875, 1
+                        rgba: root.bgplaying
                     Rectangle:
                         size: self.size
                         pos: self.pos

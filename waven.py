@@ -71,8 +71,16 @@ from songs import SongItem, Songs
 from search import Search
 
 class Waven(RelativeLayout):
+    
 
     def __init__(self, **kwargs):
+        
+        #self.bgcolor = (.2109375, .23828125, .27734375, 1)
+        
+        #configuracion general de color
+        self.set_background_color("#1c2c2b")
+        self.set_foreground_color("#363d47") #in progress
+        
         super(Waven, self).__init__(**kwargs)
         
         self.current_playlist = None
@@ -100,6 +108,7 @@ class Waven(RelativeLayout):
             
         elif platform == 'linux' or platform == 'win' or platform == 'macosx':
             self.downloadpath = "downloads"
+            
 
         return
         
@@ -111,6 +120,36 @@ class Waven(RelativeLayout):
             self.configuration = {"paths":["data_repository"]}
             #save configuration
             open("configuration.json", "w+").write(json.dumps(self.configuration) )
+            
+    def set_background_color(self, color):
+        '''
+        color debe venir en formato HTML de la forma #RRGGBB
+        '''
+        print("Color de fondo: " + color)
+        r = int(color[1:3], 16)
+        g = int(color[3:5], 16)
+        b = int(color[5:7], 16)
+        
+        #print(r,g,b)
+        
+        self.bgcolor = (r/255.0, g/255.0, b/255.0, 1)
+        self.bgplaying = (r/255.0, g/255.0, b/255.0, 1)
+        
+        #print self.bgcolor
+        
+    def set_foreground_color(self, color):
+        '''
+        color debe venir en formato HTML de la forma #RRGGBB
+        '''
+        print("Color de frente: " + color)
+        
+        r = int(color[1:3], 16)
+        g = int(color[3:5], 16)
+        b = int(color[5:7], 16)
+        
+        #print(r,g,b)
+        
+        self.fgcolor = (r/255.0, g/255.0, b/255.0, 1)
             
     def show_maximize(self):
         self.btn_maximize.opacity = 1
