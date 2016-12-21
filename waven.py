@@ -93,7 +93,6 @@ class Waven(RelativeLayout):
         self.modalsearch = ModalSearch()
         self.modaldownloads = ModalDownloads()
         
-        self.songs.update_songs()
         
         if platform == 'android':
             self.downloadpath = "/mnt/sdcard/ACTUALIZACION/Descargas"
@@ -124,6 +123,7 @@ class Waven(RelativeLayout):
     def initialization(self, dt):
         
         self.playlists.update_view()
+        self.songs.update_songs()
             
     def set_background_color(self, color):
         '''

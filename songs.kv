@@ -8,42 +8,41 @@
     artista:artista
     duracion:duracion
     
-    canvas:
-        Color:
-            rgba: .2, .2, .2, 1
-            #rgba: app.root.fgcolor
-        Rectangle:
-            size: self.size
-            pos: self.pos
     
-    BoxLayout:
-        orientation: "vertical"
-        padding: 10
-        Label:
-            text: "Titulo de cancion"
-            text_size: self.width, None
-            size: self.texture_size
-            font_size: 20
-            id: pista
-            
-        Label:
-            text: "Artista"
-            text_size: self.width, None
-            size: self.texture_size
-            id: artista
+    RelativeLayout:
+        Button:
+            background_color: app.root.fgcolor
+            background_normal: ""
         
-    Label:
-        size_hint_x: None
-        text: "0:00"
-        id: duracion
+        BoxLayout:
+            BoxLayout:
+                orientation: "vertical"
+                padding: 10
+                Label:
+                    text: "Titulo de cancion"
+                    text_size: self.width, None
+                    size: self.texture_size
+                    font_size: 20
+                    id: pista
+                    
+                Label:
+                    text: "Artista"
+                    text_size: self.width, None
+                    size: self.texture_size
+                    id: artista
+            
+            Label:
+                size_hint_x: None
+                text: "0:00"
+                id: duracion
+            
+        
 
 <Songs>:
     items:items
+    padding: 10
     ScrollBox:
         orientation: "vertical"
         spacing: 2
         id: items
         
-        SongItem:
-        SongItem:
-        SongItem:
