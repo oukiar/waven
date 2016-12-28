@@ -8,8 +8,12 @@ Builder.load_file('songs.kv')
 
 import devslib.cloud as cloud
 
+import os
+
 class SongItem(BoxLayout):
-    pass
+    def do_play(self):
+        print(self.object_instance.Filename)
+        App.get_running_app().root.do_play(filename=self.object_instance.Filename, song=self.object_instance)
 
 class Songs(BoxLayout):
     def update_songs(self):
@@ -21,16 +25,20 @@ class Songs(BoxLayout):
         result = query.find()
 
         for i in result:
-            item = SongItem()
-            item.pista.text = i.Title[:60]
             
-            playlist = cloud.create("Playlists", i.Playlist)
-            
-            if hasattr(playlist, "Title"):
-                item.artista.text = playlist.Title
-            else:
-                item.artista.text = "ERROR"
+            if os.path.isfile(i.Filename):
                 
-            item.duracion.text = str(i.Duration)
+                item = SongItem()
+                item.pista.text = i.Title[:60]
+                item.object_instance = i
+                
+                playlist = cloud.create("Playlists", i.Playlist)
+                
+                if hasattr(playlist, "Title"):
+                    item.artista.text = playlist.Title
+                else:
+                    item.artista.text = "No album"
+                    
+                item.duracion.text = str(i.Duration)
 
-            self.items.add_widget(item)
+                self.items.add_widget(item)

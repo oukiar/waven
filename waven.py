@@ -209,8 +209,13 @@ class Waven(RelativeLayout):
                         
                         #start playing the next playlist
                         query = cloud.Query(className="Playlists")
-                        query.greaterThan("OrderIndex", self.current_playlist.OrderIndex)
                         
+                        if self.current_playlist != None:
+                            query.greaterThan("OrderIndex", self.current_playlist.OrderIndex)
+                        else:
+                            pass
+                            #query.greaterThan("OrderIndex", self.current_playlist.OrderIndex)
+                            
                         query.orderby("OrderIndex")
                         
                         result = query.find()
@@ -258,6 +263,7 @@ class Waven(RelativeLayout):
         filename = kwargs.get("filename")
         
         self.last_played = kwargs.get("song", None)
+    
         
         print("Playing: " + filename)
         
