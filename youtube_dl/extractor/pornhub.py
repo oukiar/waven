@@ -15,6 +15,7 @@ from ..compat import (
 from ..utils import (
     ExtractorError,
     int_or_none,
+    js_to_json,
     orderedSet,
     sanitized_Request,
     str_to_int,
@@ -25,7 +26,15 @@ from ..aes import (
 
 
 class PornHubIE(InfoExtractor):
-    _VALID_URL = r'https?://(?:[a-z]+\.)?pornhub\.com/(?:view_video\.php\?viewkey=|embed/)(?P<id>[0-9a-z]+)'
+    IE_DESC = 'PornHub and Thumbzilla'
+    _VALID_URL = r'''(?x)
+                    https?://
+                        (?:
+                            (?:[a-z]+\.)?pornhub\.com/(?:view_video\.php\?viewkey=|embed/)|
+                            (?:www\.)?thumbzilla\.com/video/
+                        )
+                        (?P<id>[\da-z]+)
+                    '''
     _TESTS = [{
         'url': 'http://www.pornhub.com/view_video.php?viewkey=648719015',
         'md5': '1e19b41231a02eba417839222ac9d58e',
@@ -40,6 +49,8 @@ class PornHubIE(InfoExtractor):
             'dislike_count': int,
             'comment_count': int,
             'age_limit': 18,
+            'tags': list,
+            'categories': list,
         },
     }, {
         # non-ASCII title
@@ -55,6 +66,8 @@ class PornHubIE(InfoExtractor):
             'dislike_count': int,
             'comment_count': int,
             'age_limit': 18,
+            'tags': list,
+            'categories': list,
         },
         'params': {
             'skip_download': True,
@@ -63,16 +76,31 @@ class PornHubIE(InfoExtractor):
         'url': 'http://www.pornhub.com/view_video.php?viewkey=ph557bbb6676d2d',
         'only_matching': True,
     }, {
+        # removed at the request of cam4.com
         'url': 'http://fr.pornhub.com/view_video.php?viewkey=ph55ca2f9760862',
+        'only_matching': True,
+    }, {
+        # removed at the request of the copyright owner
+        'url': 'http://www.pornhub.com/view_video.php?viewkey=788152859',
+        'only_matching': True,
+    }, {
+        # removed by uploader
+        'url': 'http://www.pornhub.com/view_video.php?viewkey=ph572716d15a111',
+        'only_matching': True,
+    }, {
+        # private video
+        'url': 'http://www.pornhub.com/view_video.php?viewkey=ph56fd731fce6b7',
+        'only_matching': True,
+    }, {
+        'url': 'https://www.thumbzilla.com/video/ph56c6114abd99a/horny-girlfriend-sex',
         'only_matching': True,
     }]
 
-    @classmethod
-    def _extract_url(cls, webpage):
-        mobj = re.search(
-            r'<iframe[^>]+?src=(["\'])(?P<url>(?:https?:)?//(?:www\.)?pornhub\.com/embed/\d+)\1', webpage)
-        if mobj:
-            return mobj.group('url')
+    @staticmethod
+    def _extract_urls(webpage):
+        return re.findall(
+            r'<iframe[^>]+?src=["\'](?P<url>(?:https?:)?//(?:www\.)?pornhub\.com/embed/[\da-z]+)',
+            webpage)
 
     def _extract_count(self, pattern, webpage, name):
         return str_to_int(self._search_regex(
@@ -87,8 +115,8 @@ class PornHubIE(InfoExtractor):
         webpage = self._download_webpage(req, video_id)
 
         error_msg = self._html_search_regex(
-            r'(?s)<div class="userMessageSection[^"]*".*?>(.*?)</div>',
-            webpage, 'error message', default=None)
+            r'(?s)<div[^>]+class=(["\'])(?:(?!\1).)*\b(?:removed|userMessageSection)\b(?:(?!\1).)*\1[^>]*>(?P<error>.+?)</div>',
+            webpage, 'error message', default=None, group='error')
         if error_msg:
             error_msg = re.sub(r'\s+', ' ', error_msg)
             raise ExtractorError(
@@ -159,6 +187,15 @@ class PornHubIE(InfoExtractor):
             })
         self._sort_formats(formats)
 
+        page_params = self._parse_json(self._search_regex(
+            r'page_params\.zoneDetails\[([\'"])[^\'"]+\1\]\s*=\s*(?P<data>{[^}]+})',
+            webpage, 'page parameters', group='data', default='{}'),
+            video_id, transform_source=js_to_json, fatal=False)
+        tags = categories = None
+        if page_params:
+            tags = page_params.get('tags', '').split(',')
+            categories = page_params.get('categories', '').split(',')
+
         return {
             'id': video_id,
             'uploader': video_uploader,
@@ -171,6 +208,8 @@ class PornHubIE(InfoExtractor):
             'comment_count': comment_count,
             'formats': formats,
             'age_limit': 18,
+            'tags': tags,
+            'categories': categories,
         }
 
 
@@ -190,7 +229,14 @@ class PornHubPlaylistBaseIE(InfoExtractor):
 
         webpage = self._download_webpage(url, playlist_id)
 
-        entries = self._extract_entries(webpage)
+        # Only process container div with main playlist content skipping
+        # drop-down menu that uses similar pattern for videos (see
+        # https://github.com/rg3/youtube-dl/issues/11594).
+        container = self._search_regex(
+            r'(?s)(<div[^>]+class=["\']container.+)', webpage,
+            'container', default=webpage)
+
+        entries = self._extract_entries(container)
 
         playlist = self._parse_json(
             self._search_regex(
@@ -204,12 +250,12 @@ class PornHubPlaylistBaseIE(InfoExtractor):
 class PornHubPlaylistIE(PornHubPlaylistBaseIE):
     _VALID_URL = r'https?://(?:www\.)?pornhub\.com/playlist/(?P<id>\d+)'
     _TESTS = [{
-        'url': 'http://www.pornhub.com/playlist/6201671',
+        'url': 'http://www.pornhub.com/playlist/4667351',
         'info_dict': {
-            'id': '6201671',
-            'title': 'P0p4',
+            'id': '4667351',
+            'title': 'Nataly Hot',
         },
-        'playlist_mincount': 35,
+        'playlist_mincount': 2,
     }]
 
 
