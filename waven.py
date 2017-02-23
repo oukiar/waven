@@ -174,7 +174,7 @@ class Waven(RelativeLayout):
             self.layout.add_widget(self.maingui)
             
             
-            self.playing.add_widget(self.videolayout)
+            self.playing.add_widget(self.videolayout, index=4)
         
     def update_fs(self, texture):
         #self.videofullscreen.texture = texture
