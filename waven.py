@@ -154,6 +154,31 @@ class Waven(RelativeLayout):
         #print(r,g,b)
         
         self.fgcolor = (r/255.0, g/255.0, b/255.0, 1)
+       
+    def do_fullscreen(self):
+        
+        if self.maingui in self.layout.children:
+            
+            print("Going to fullscreen")
+            
+            self.playing.remove_widget(self.videolayout)
+            self.layout.remove_widget(self.maingui)
+            
+            
+            self.layout.add_widget(self.videolayout)
+        else:
+            
+            print("Releasing fullscreen")
+            
+            self.layout.remove_widget(self.videolayout)
+            self.layout.add_widget(self.maingui)
+            
+            
+            self.playing.add_widget(self.videolayout)
+        
+    def update_fs(self, texture):
+        #self.videofullscreen.texture = texture
+        pass
             
     def show_maximize(self):
         self.btn_maximize.opacity = 1
