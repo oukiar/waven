@@ -8,7 +8,9 @@ from ..utils import (
     ExtractorError,
     determine_ext,
     int_or_none,
+    float_or_none,
     js_to_json,
+    orderedSet,
     strip_jsonp,
     strip_or_none,
     unified_strdate,
@@ -193,6 +195,8 @@ class PBSIE(InfoExtractor):
         )
     ''' % '|'.join(list(zip(*_STATIONS))[0])
 
+    _GEO_COUNTRIES = ['US']
+
     _TESTS = [
         {
             'url': 'http://www.pbs.org/tpt/constitution-usa-peter-sagal/watch/a-more-perfect-union/',
@@ -260,6 +264,13 @@ class PBSIE(InfoExtractor):
                 'id': 'united-states-of-secrets',
             },
             'playlist_count': 2,
+        },
+        {
+            'url': 'http://www.pbs.org/wgbh/americanexperience/films/great-war/',
+            'info_dict': {
+                'id': 'great-war',
+            },
+            'playlist_count': 3,
         },
         {
             'url': 'http://www.pbs.org/wgbh/americanexperience/films/death/player/',
@@ -379,10 +390,10 @@ class PBSIE(InfoExtractor):
             # tabbed frontline videos
             MULTI_PART_REGEXES = (
                 r'<div[^>]+class="videotab[^"]*"[^>]+vid="(\d+)"',
-                r'<a[^>]+href=["\']#video-\d+["\'][^>]+data-coveid=["\'](\d+)',
+                r'<a[^>]+href=["\']#(?:video-|part)\d+["\'][^>]+data-cove[Ii]d=["\'](\d+)',
             )
             for p in MULTI_PART_REGEXES:
-                tabbed_videos = re.findall(p, webpage)
+                tabbed_videos = orderedSet(re.findall(p, webpage))
                 if tabbed_videos:
                     return tabbed_videos, presumptive_id, upload_date, description
 
@@ -462,6 +473,7 @@ class PBSIE(InfoExtractor):
                     redirects.append(redirect)
                     redirect_urls.add(redirect_url)
 
+        chapters = []
         # Player pages may also serve different qualities
         for page in ('widget/partnerplayer', 'portalplayer'):
             player = self._download_webpage(
@@ -477,6 +489,20 @@ class PBSIE(InfoExtractor):
                     extract_redirect_urls(video_info)
                     if not info:
                         info = video_info
+                if not chapters:
+                    for chapter_data in re.findall(r'(?s)chapters\.push\(({.*?})\)', player):
+                        chapter = self._parse_json(chapter_data, video_id, js_to_json, fatal=False)
+                        if not chapter:
+                            continue
+                        start_time = float_or_none(chapter.get('start_time'), 1000)
+                        duration = float_or_none(chapter.get('duration'), 1000)
+                        if start_time is None or duration is None:
+                            continue
+                        chapters.append({
+                            'start_time': start_time,
+                            'end_time': start_time + duration,
+                            'title': chapter.get('title'),
+                        })
 
         formats = []
         http_url = None
@@ -489,11 +515,13 @@ class PBSIE(InfoExtractor):
                 headers=self.geo_verification_headers())
 
             if redirect_info['status'] == 'error':
+                message = self._ERRORS.get(
+                    redirect_info['http_code'], redirect_info['message'])
+                if redirect_info['http_code'] == 403:
+                    self.raise_geo_restricted(
+                        msg=message, countries=self._GEO_COUNTRIES)
                 raise ExtractorError(
-                    '%s said: %s' % (
-                        self.IE_NAME,
-                        self._ERRORS.get(redirect_info['http_code'], redirect_info['message'])),
-                    expected=True)
+                    '%s said: %s' % (self.IE_NAME, message), expected=True)
 
             format_url = redirect_info.get('url')
             if not format_url:
@@ -511,7 +539,7 @@ class PBSIE(InfoExtractor):
                     http_url = format_url
         self._remove_duplicate_formats(formats)
         m3u8_formats = list(filter(
-            lambda f: f.get('protocol') == 'm3u8' and f.get('vcodec') != 'none' and f.get('resolution') != 'multiple',
+            lambda f: f.get('protocol') == 'm3u8' and f.get('vcodec') != 'none',
             formats))
         if http_url:
             for m3u8_format in m3u8_formats:
@@ -584,4 +612,5 @@ class PBSIE(InfoExtractor):
             'upload_date': upload_date,
             'formats': formats,
             'subtitles': subtitles,
+            'chapters': chapters,
         }
