@@ -37,7 +37,7 @@ version = 0.1
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
 #requirements = pyjnius, lxml, pil, plyer, netifaces, openssl, sqlite3, kivy
-requirements = hostpython2, kivy
+requirements = android, hostpython2, python2, pyjnius, git+https://github.com/kivy/plyer.git, netifaces, requests, openssl, urllib3, sqlite3, kivy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -103,7 +103,7 @@ android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, WAKE_LOCK, ACCESS_NETWOR
 #android.p4a_dir =
 
 # (list) python-for-android whitelist
-#android.p4a_whitelist =
+#android.p4a_whitelist = lib-dynload/_ctypes.so
 
 # (bool) If True, then skip trying to update the Android sdk
 # This can be useful to avoid excess Internet downloads or save time
