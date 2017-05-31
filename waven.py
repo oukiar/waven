@@ -83,6 +83,8 @@ class Waven(RelativeLayout):
         
         super(Waven, self).__init__(**kwargs)
         
+        print("Despues de super")
+        
         self.current_playlist = None
         
         self.playnext = []
