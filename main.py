@@ -89,7 +89,7 @@ class Waven(RelativeLayout):
         
         self.playnext = []
 
-        cloud.init("playlists.db")
+        cloud.init(database="playlists.db")
 
 
         self.modalsearch = ModalSearch()
