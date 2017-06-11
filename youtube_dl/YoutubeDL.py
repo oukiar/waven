@@ -313,6 +313,9 @@ class YoutubeDL(object):
         """Create a FileDownloader object with the given options."""
         if params is None:
             params = {}
+            
+        self.downloads = params.get("downloads", "downloads")
+            
         self._ies = []
         self._ies_instances = {}
         self._pps = []
@@ -678,7 +681,8 @@ class YoutubeDL(object):
             # to workaround encoding issues with subprocess on python2 @ Windows
             if sys.version_info < (3, 0) and sys.platform == 'win32':
                 filename = encodeFilename(filename, True).decode(preferredencoding())
-            return sanitize_path(filename)
+            #return sanitize_path(filename)
+            return sanitize_path(os.path.join(self.downloads, filename) )
         except ValueError as err:
             self.report_error('Error in output template: ' + str(err) + ' (encoding: ' + repr(preferredencoding()) + ')')
             return None
