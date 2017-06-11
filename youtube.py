@@ -80,7 +80,8 @@ class YoutubeDownload(Thread):
                 "downloads": self.downloadpath
                     }
 
-        else:            
+        else:   
+            '''         
             if platform == "android":
 
                 dest = self.filename + ".m4a"
@@ -106,6 +107,19 @@ class YoutubeDownload(Thread):
                     "quiet": True,
                     "downloads": self.downloadpath
                         }
+            '''
+            
+            dest = self.filename + ".mp4"
+            
+            #   OPCIONES DESCARGA YOUTUBE
+            ydl_opts = {"format":"18", #comentado desde que se habilito la descarga por url
+                "progress_hooks":[self.item.setProgress],
+                "no_color": True,
+                "nopart": True,
+                "outtmpl": dest,
+                "quiet": True,
+                "downloads": self.downloadpath
+                    }
                         
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             filename = ydl.download([self.url])
