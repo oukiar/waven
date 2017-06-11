@@ -3,3 +3,5 @@ playlists.db
 bin
 downloads
 .buildozer
+.DS_Store
+
