@@ -264,10 +264,12 @@ class ModalSearch(Popup):
             item.playlist = App.get_running_app().root.current_playlist
             item.filename = i.name + ".mp4"
             
+            '''
             if "http" not in i.thumbnail:
                 i.thumbnail = "http:" + i.thumbnail
             
             item.preview.source = i.thumbnail
+            '''
             
             #print("THUMBNAIL: ", i.thumbnail)
             
