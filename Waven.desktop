@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Waven
+Comment=Search and download videos
+Exec=/usr/bin/python main.py
+Icon=/home/pc/waven/icon.png
+Path=/home/pc/waven/
+Terminal=false
+Type=Application
