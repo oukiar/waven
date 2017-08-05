@@ -291,6 +291,9 @@ class Waven(RelativeLayout):
         
         self.last_played = kwargs.get("song", None)
     
+        if not os.path.exists(filename):
+            print('Does not exists')
+            return
         
         print("Playing: " + filename)
         
