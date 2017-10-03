@@ -10,7 +10,7 @@ class ModalAddPlaylist(Popup):
         
         playlist.Title = self.txt_title.text.capitalize()
         playlist.Year = 2016
-        playlist.OrderIndex = cloud.get_max("Playlists", "OrderIndex") + 1
+        playlist.OrderIndex = cloud.get_max(className="Playlists", field="OrderIndex") + 1
         
         if playlist.save():
             self.dismiss()
