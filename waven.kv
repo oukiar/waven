@@ -110,6 +110,13 @@
                 
             BoxLayout:
                 
+                Spinner:
+                    text: 'HD'
+                    values: ('VGA', 'HD', 'FHD', 'SND', 'No')
+                    size_hint_x: None
+                    width: 50
+                    id: quality
+                
                 TextInput:
                     id: searchtext
                     hint_text: "Enter your search keywords"
@@ -183,6 +190,13 @@
     BoxLayout:
         orientation: "vertical"
 
+        Spinner:
+            text: 'HD'
+            values: ('VGA', 'HD', 'FHD', 'No')
+            size_hint_x: None
+            width: 50
+            id: quality
+            
         TextInput:
             hint_text: "Put the URL here"
             id: txt_url
