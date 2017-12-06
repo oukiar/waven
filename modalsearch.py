@@ -46,7 +46,7 @@ class ResultItem(BoxLayout):
                             url=self.url, 
                             filename=self.title.text, 
                             on_complete=self.on_complete, 
-                            quality=self.ids.quality.text,
+                            quality=self.modal.ids.quality.text,
                             downloadpath=os.path.join(App.get_running_app().root.downloadpath, self.playlist.Title) )
         
         
@@ -264,6 +264,7 @@ class ModalSearch(Popup):
             item.url = i.url
             item.playlist = App.get_running_app().root.current_playlist
             item.filename = i.name + ".mp4"
+            item.modal = self
             
             '''
             if "http" not in i.thumbnail:
