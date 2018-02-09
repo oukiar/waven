@@ -37,7 +37,7 @@ version = 0.1
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
 #requirements = pyjnius, lxml, pil, plyer, netifaces, openssl, sqlite3, kivy
-requirements = android, python2, sqlite3, pyjnius, git+https://github.com/kivy/plyer.git, ffpyplayer, openssl, ffpyplayer_codecs, kivy
+requirements = android, python2, plyer, sqlite3, pyjnius, ffpyplayer, openssl, ffpyplayer_codecs, kivy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -102,7 +102,7 @@ android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, WAKE_LOCK, ACCESS_NETWOR
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
 #android.p4a_dir =
 #android.p4a_dir = /home/oscar/waven/.buildozer/tmpfix/python-for-android
-p4a.source_dir = /home/oscar/waven/.buildozer/tmpfix/python-for-android
+#p4a.source_dir = /home/oscar/waven/.buildozer/tmpfix/python-for-android
  
 # (list) python-for-android whitelist
 #android.p4a_whitelist = lib-dynload/_ctypes.so
