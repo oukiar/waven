@@ -140,7 +140,13 @@ class ModalDownloadByURL(Popup):
         App.get_running_app().root.modaldownloads.layout.add_widget(item)
         
         #start the download
-        YoutubeDownload(item=item, url=item.url, filename=item.title.text, on_complete=item.on_complete, originaltitle=True, quality=self.ids.quality.text)
+        YoutubeDownload(item=item, 
+                            url=item.url, 
+                            filename=item.title.text, 
+                            on_complete=item.on_complete, 
+                            originaltitle=True, 
+                            #quality=self.ids.quality.text
+                            )
        
         self.dismiss()
         App.get_running_app().root.modaldownloads.open()

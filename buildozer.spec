@@ -37,7 +37,7 @@ version = 0.1
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
 #requirements = pyjnius, lxml, pil, plyer, netifaces, openssl, sqlite3, kivy
-requirements = android, python2, plyer, sqlite3, pyjnius, ffpyplayer, openssl, ffpyplayer_codecs, kivy
+requirements = android, python2, plyer, sqlite3, pyjnius, ffpyplayer, openssl, kivy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
