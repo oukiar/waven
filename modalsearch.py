@@ -24,11 +24,15 @@ import devslib.cloud as cloud
 
 class ResultItem(BoxLayout):
     def do_download(self):
+        self.title.text = self.title.text.decode(errors='replace')
         try:
+            print("Antes de primer downloading")
             print("Downloading " + self.title.text )
         except:
+            print("Error, probando de nuevo")
             print("Downloading " + self.title.text.encode('utf8') )
         
+        return
         
         #remove download button
         self.layout_download.remove_widget(self.btn_download)
@@ -44,7 +48,7 @@ class ResultItem(BoxLayout):
         #sys.stderr = stderr_backup
         YoutubeDownload(item=self, 
                             url=self.url, 
-                            filename=self.title.text, 
+                            filename=self.title.text.encode('utf8') , 
                             on_complete=self.on_complete, 
                             quality=self.modal.ids.quality.text,
                             downloadpath=os.path.join(App.get_running_app().root.downloadpath, self.playlist.Title) )

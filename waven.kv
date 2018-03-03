@@ -235,11 +235,24 @@
             text: "Export to ..."
             font_size: 24
 
+<WavenVideo>:
+    id: video
+    on_state: app.root.on_video_state(args[1])
+    on_loaded: app.root.on_videoloaded()
+    on_position: app.root.update_time(args[1])
+    on_touch_down: app.root.show_maximize()
+    on_texture: app.root.update_fs(args[1])
+    allow_stretch: True
+    #keep_ratio: False
+    #pos_hint: {'x':0, 'y':0}
+
+
 <Waven>:
 
     #videofullscreen:videofullscreen
     layout:layout
     maingui:maingui.__self__
+    video:video.__self__
     screens:screens
 
 	playlists:playlists
@@ -387,7 +400,7 @@
                             anchor_y: 'top'
                             id:videolayout
                             
-                            Video:
+                            WavenVideo:
                                 id: video
                                 on_state: root.on_video_state(args[1])
                                 on_loaded: root.on_videoloaded()

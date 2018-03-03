@@ -39,6 +39,7 @@ from kivy.uix.screenmanager import SlideTransition
 from kivy.uix.boxlayout import BoxLayout 
 from kivy.uix.button import Button 
 from kivy.uix.popup import Popup 
+from kivy.uix.video import Video
 from kivy.clock import Clock
 
 from kivy.app import App
@@ -290,6 +291,13 @@ class Waven(RelativeLayout):
                 
     def do_play(self, dt=None, **kwargs):
         
+        #remove old video widget (for fix any problem between plays)
+        self.remove_widget(self.video)
+        
+        self.video = WavenVideo()
+        
+        self.ids.videolayout.add_widget(self.video, 0)
+        
         filename = kwargs.get("filename")
         
         self.last_played = kwargs.get("song", None)
@@ -424,6 +432,8 @@ class Waven(RelativeLayout):
         if self.video.state == "play":
             self.video.volume = vol
 
+class WavenVideo(Video):
+    pass
 
 class WavenApp(App):
     #icon = 'icon.png'
