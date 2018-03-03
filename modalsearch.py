@@ -32,7 +32,7 @@ class ResultItem(BoxLayout):
             print("Error, probando de nuevo")
             print("Downloading " + self.title.text.encode('utf8') )
         
-        return
+        #return
         
         #remove download button
         self.layout_download.remove_widget(self.btn_download)
