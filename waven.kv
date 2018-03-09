@@ -13,7 +13,7 @@
     size_hint_y: None
     spacing: 5
     
-    AsyncImage:
+    Image:
         size_hint_x: None
         width: 60
         id: preview
@@ -36,7 +36,7 @@
                 id: btn_download
                 text: "Download"
                 size_hint_x: None
-                width: 120
+                width: '100sp'
                 on_release: root.do_download()
                 
 <DownloadItem>:
@@ -127,7 +127,7 @@
                 Button:
                     text: "Search"
                     size_hint_x: None
-                    width: 70
+                    width: '70sp'
                     on_release: root.on_search()
                                                     
 

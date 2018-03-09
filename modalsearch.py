@@ -22,18 +22,14 @@ from devslib.utils import RotativeImage
 
 import devslib.cloud as cloud
 
+
 class ResultItem(BoxLayout):
     def do_download(self):
-        self.title.text = self.title.text.decode(errors='replace')
-        try:
-            print("Antes de primer downloading")
-            print("Downloading " + self.title.text )
-        except:
-            print("Error, probando de nuevo")
-            print("Downloading " + self.title.text.encode('utf8') )
-        
-        #return
-        
+
+        print("Antes de primer downloading")
+        title = self.title.text.encode('ascii', 'replace').replace("?", "").replace(":", "")
+        print("Downloading " + title )
+    
         #remove download button
         self.layout_download.remove_widget(self.btn_download)
         
@@ -48,7 +44,7 @@ class ResultItem(BoxLayout):
         #sys.stderr = stderr_backup
         YoutubeDownload(item=self, 
                             url=self.url, 
-                            filename=self.title.text.encode('utf8') , 
+                            filename=title , 
                             on_complete=self.on_complete, 
                             quality=self.modal.ids.quality.text,
                             downloadpath=os.path.join(App.get_running_app().root.downloadpath, self.playlist.Title) )
@@ -96,10 +92,13 @@ class ResultItem(BoxLayout):
             
             self.song_object = song
             
+            '''
             try:
                 print("Almacenado en la BD: " + song.Title )
             except:
                 print("Almacenado en la BD: " + song.Title.encode('utf8') )
+            '''
+            
             print("--- Playlist: " + str(song.Playlist))
             print("--- OrderIndex: " + str(song.OrderIndex) )
             
@@ -243,6 +242,9 @@ class ModalDownloads(Popup):
     pass
         
 class ModalSearch(Popup):
+    def on_open(self):
+        #if self.searchtext.text != "":
+        print("Abriendo modal de busqueda")
         
     def on_search(self):
         print("Searching: " + self.searchtext.text)

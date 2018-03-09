@@ -44,6 +44,7 @@ class Cache(object):
             return
 
         fn = self._get_cache_fn(section, key, dtype)
+        print("FN: ", fn)
         try:
             try:
                 os.makedirs(os.path.dirname(fn))

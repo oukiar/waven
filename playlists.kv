@@ -3,24 +3,25 @@
 
 <ModalAddPlaylist>:
     size_hint: (None, None)
-    size: (350,280)
+    size: ('300sp','200sp')
     title: "Create playlist"
     txt_title: txt_title
     BoxLayout:
         orientation: "vertical"
-        padding: (40, 50)
+        #padding: (40, 50)
         spacing: 10
         
         TextInput:
             id: txt_title
             hint_text: "Title"
-            font_size: 22
+            font_size: '40sp'
             multiline: False
             on_text_validate: root.create_playlist()
         
         Button:
             text: "OK"
             on_release: root.create_playlist()
+            font_size: '40sp'
         
 
 <ModalPlaylistEdit>:

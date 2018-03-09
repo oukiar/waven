@@ -235,6 +235,7 @@ class Waven(RelativeLayout):
                     #print(result)
                     if len(result):
                         song = result[0]
+                        print("Reproduciendo", song)
                     else:
                         print("End of playlist")
                         
@@ -292,11 +293,10 @@ class Waven(RelativeLayout):
     def do_play(self, dt=None, **kwargs):
         
         #remove old video widget (for fix any problem between plays)
-        self.remove_widget(self.video)
+        #self.remove_widget(self.video)
         
-        self.video = WavenVideo()
-        
-        self.ids.videolayout.add_widget(self.video, 0)
+        #self.video = WavenVideo()
+        #self.ids.videolayout.add_widget(self.video, 0)
         
         filename = kwargs.get("filename")
         
@@ -439,7 +439,102 @@ class WavenApp(App):
     #icon = 'icon.png'
     def build(self):   
         #self.icon = './icon.png'
+        
         return Waven()
+        
+        #self.video = Video(source="video1.mp4")
+        
+        self.but = Button(text="stop")
+        self.but.bind(on_release=self.nextsong)
+        
+        self.but2 = Button(text="play 2")
+        self.but2.bind(on_release=self.play2)
+        
+        self.but3 = Button(text="play 3")
+        self.but3.bind(on_release=self.play3)
+        
+        self.lay = BoxLayout(orientation='vertical')
+        
+        #self.lay.add_widget(self.video)
+        self.lay.add_widget(self.but)
+        self.lay.add_widget(self.but2)
+        self.lay.add_widget(self.but3)
+        
+        return self.lay
+        
+        
+        
+        
+    def nextsong(self, w):
+        print w
+        
+        
+        
+        self.lay.remove_widget(self.video)
+        
+        self.video.state = 'stop'
+        del self.video
+        
+    def play2(self, w):
+        
+        
+        from ffpyplayer.player import MediaPlayer
+        
+        count = 0
+        print("Antes de media player")
+        player = MediaPlayer("video1.mp4")
+        print("Despues de media player")
+        val = ''
+        while val != 'eof':
+            frame, val = player.get_frame()
+            print frame, count
+            if val != 'eof' and frame is not None:
+                img, t = frame
+                # display img
+                print img
+
+            if count == 300:
+                break
+                
+            count += 1
+
+        count = 0
+        
+        #del player
+        
+        Clock.schedule_once(self.playX, 1)
+        
+    def playX(self, dt):
+        
+        from ffpyplayer.player import MediaPlayer
+        
+        count =0
+        
+        player = MediaPlayer("video2.mp4")
+        val = ''
+        while val != 'eof':
+            frame, val = player.get_frame()
+            if val != 'eof' and frame is not None:
+                img, t = frame
+                # display img
+                print img
+
+
+            if count == 300:
+                break
+                
+            count += 1
+               
+        print("Termina reporoduccion")
+                
+        return
+        
+        self.video = Video(source="video1.mp4")
+    
+        self.lay.add_widget(self.video)
+        
+    def play3(self, w):
+        self.video.state = 'play'
     
     def on_start(self):
         pass
