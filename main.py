@@ -188,11 +188,13 @@ class Waven(RelativeLayout):
             
     def show_maximize(self):
         self.btn_maximize.opacity = 1
+        self.ids.lay_controls.opacity = 1
         Clock.unschedule(self.hide_maximize)
         Clock.schedule_once(self.hide_maximize, 3)
         
     def hide_maximize(self, dt):
         self.btn_maximize.opacity = 0
+        self.ids.lay_controls.opacity = 0
             
     def show_playlist_menu(self):
         PlaylistMenu().open()

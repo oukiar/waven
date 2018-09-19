@@ -394,7 +394,7 @@
                                 text: "00:00"
                                 #color: 0.89,0.559,0.270,1
                                 halign: "right"
-                            
+                        
                         AnchorLayout:
                             anchor_x: 'right'
                             anchor_y: 'top'
@@ -420,6 +420,24 @@
                                 background_normal: "images/maximize_64.png"
                                 background_down: "images/maximize_64_down.png"
                                 on_release: root.do_fullscreen()
+                            
+                            AnchorLayout:
+                                anchor_x: 'center'
+                                anchor_y: 'bottom'
+                                id: lay_controls
+                                opacity: 0
+
+                                BoxLayout:
+                                    size_hint_y: None
+                                    height: '60sp'
+                                    opacity: .6
+                                    Button:
+                                        text: '<<'
+                                    Button:
+                                        text: '||'
+                                    Button:
+                                        text: '>>'
+                                        on_release: root.video.state = "stop"
                             
                         AnchorLayout:
                             size_hint_y: None

@@ -4,4 +4,4 @@ bin
 downloads
 .buildozer
 .DS_Store
-
+*.mp4
