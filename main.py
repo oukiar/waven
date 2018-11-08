@@ -12,7 +12,7 @@ Es responsabilidad de los usuarios respetar el contenido de los videos,
 en caso de algun problema, pueden bloquear el video reportandolo en el 
 siguiente enlace:
 
-http://natorg.net/waven/copyright
+http://waven.org/copyright
 
 Usted es responsable de lo que descarga, waven no tiene ni tendra jamas
 control de contenido a menos de que sea previamente reportado en la liga

@@ -32,7 +32,7 @@ class Songs(BoxLayout):
                 item.pista.text = i.Title[:60]
                 item.object_instance = i
                 
-                playlist = cloud.create("Playlists", i.Playlist)
+                playlist = cloud.create(className="Playlists", objectId=i.Playlist)
                 
                 if hasattr(playlist, "Title"):
                     item.artista.text = playlist.Title
