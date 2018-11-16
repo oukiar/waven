@@ -6,7 +6,7 @@ import devslib.cloud as cloud
 
 class ModalAddPlaylist(Popup):
     def create_playlist(self):
-        playlist = cloud.create("Playlists")
+        playlist = cloud.create(className="Playlists")
         
         playlist.Title = self.txt_title.text.capitalize()
         playlist.Year = 2016
