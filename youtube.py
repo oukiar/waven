@@ -197,11 +197,11 @@ class YoutubeDownload(Thread):
                     }  
                      
             elif self.quality == 'SND':
-                dest = self.filename + ".m4a"
+                dest = self.filename + ".ogg"
             
                 #   OPCIONES DESCARGA YOUTUBE
-                #ydl_opts = {"format":"140", #comentado desde que se habilito la descarga por url, debido a que original title se usa cuando se descarga por URL
-                ydl_opts = {"format":"171", #comentado desde que se habilito la descarga por url, debido a que original title se usa cuando se descarga por URL
+                ydl_opts = {"format":"140", #comentado desde que se habilito la descarga por url, debido a que original title se usa cuando se descarga por URL
+                #ydl_opts = {"format":"171", #comentado desde que se habilito la descarga por url, debido a que original title se usa cuando se descarga por URL
                     "progress_hooks":[self.item.setProgress],
                     "no_color": True,
                     "nopart": True,
