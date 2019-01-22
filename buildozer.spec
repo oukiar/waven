@@ -37,7 +37,7 @@ version = 0.1
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
 #requirements = pyjnius, lxml, pil, plyer, netifaces, openssl, sqlite3, kivy
-requirements = android, python2, requests, sdl2_mixer, plyer, sqlite3, pyjnius, openssl, kivy
+requirements = android, python2, plyer, sqlite3, pyjnius, openssl, requests, kivy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -81,12 +81,12 @@ android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, WAKE_LOCK, ACCESS_NETWOR
 android.api = 26
 
 # (int) Minimum API required
-#android.minapi = 9
-android.minapi = 21
+android.minapi = 19
+#android.minapi = 21
 
 # (int) Android SDK version to use
-android.sdk = 24
-#android.sdk = 24
+android.sdk = 23
+#android.sdk = 20
 
 # (str) Android NDK version to use
 #android.ndk = 9c
@@ -110,7 +110,7 @@ android.ndk = 17c
 #android.p4a_dir = /home/oscar/waven/.buildozer/tmpfix/python-for-android
 #p4a.source_dir = /home/oscar/waven/.buildozer/tmpfix/python-for-android
 p4a.source_dir = /home/oscar/source/python-for-android
- 
+
 # (list) python-for-android whitelist
 #android.p4a_whitelist = lib-dynload/_ctypes.so
 
