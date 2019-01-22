@@ -19,7 +19,7 @@ source.include_exts = py,png,jpg,kv,atlas,json,mp4,mp3
 #source.include_patterns = assets/*,images/*.png
 
 # (list) Source files to exclude (let empty to not exclude anything)
-#source.exclude_exts = spec
+#source.exclude_exts = spec,mp4
 
 # (list) List of directory to exclude (let empty to not exclude anything)
 source.exclude_dirs = tests, bin, downloads
@@ -37,7 +37,7 @@ version = 0.1
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
 #requirements = pyjnius, lxml, pil, plyer, netifaces, openssl, sqlite3, kivy
-requirements = android, python2, plyer, sqlite3, pyjnius, openssl, requests, kivy
+requirements = android, python2, plyer, sqlite3, pyjnius, openssl, requests, ffpyplayer, kivy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -109,7 +109,7 @@ android.ndk = 17c
 #android.p4a_dir =
 #android.p4a_dir = /home/oscar/waven/.buildozer/tmpfix/python-for-android
 #p4a.source_dir = /home/oscar/waven/.buildozer/tmpfix/python-for-android
-p4a.source_dir = /home/oscar/source/python-for-android
+p4a.source_dir = ../source/python-for-android
 
 # (list) python-for-android whitelist
 #android.p4a_whitelist = lib-dynload/_ctypes.so

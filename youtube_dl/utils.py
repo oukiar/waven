@@ -8,7 +8,7 @@ import binascii
 import calendar
 import codecs
 import contextlib
-import ctypes
+#import ctypes
 import datetime
 import email.utils
 import email.header
