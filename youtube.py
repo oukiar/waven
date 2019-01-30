@@ -73,7 +73,8 @@ class YoutubeDownload(Thread):
 
         if self.originaltitle: #esto se usa unicamente cuando es decarga por URL
             
-            dest = os.path.join("downloads", "%(artist)s - %(album)s", "%(title)s")
+            #dest = os.path.join("downloads", "%(artist)s - %(album)s", "%(title)s")
+            dest = os.path.join("downloads", self.item.playlist.Title, "%(title)s")
             
             print("PLAYLIST", self.item.playlist)
             
