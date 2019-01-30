@@ -148,7 +148,7 @@ class ModalDownloadByURL(Popup):
                             filename=item.title.text, 
                             on_complete=item.on_complete, 
                             originaltitle=True, 
-                            #quality=self.ids.quality.text
+                            quality=self.ids.quality.text
                             )
        
         self.dismiss()
@@ -214,7 +214,10 @@ class DownloadItem(BoxLayout):
         print (val)
         if "_percent_str" in val:
             
-            percent = float(val["_percent_str"][:-1])
+            try:
+                percent = float(val["_percent_str"][:-1])
+            except:
+                percent = 0.0
             
             self.progress.value = percent
             

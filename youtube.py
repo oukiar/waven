@@ -71,7 +71,9 @@ class YoutubeDownload(Thread):
         if not os.path.isdir(self.downloadpath):
             os.mkdir(self.downloadpath)
 
-        if self.originaltitle:
+        if self.originaltitle: #esto se usa unicamente cuando es decarga por URL
+            
+            dest = os.path.join("downloads", "%(artist)s - %(album)s", "%(title)s")
             
             if self.quality == 'No':                
                 #   OPCIONES DESCARGA YOUTUBE
@@ -90,7 +92,7 @@ class YoutubeDownload(Thread):
                     "progress_hooks":[self.item.setProgress],
                     "no_color": True,
                     "nopart": True,
-                    #"outtmpl": dest,
+                    "outtmpl": dest,
                     "quiet": True,
                     "downloads": self.downloadpath
                         }
