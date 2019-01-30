@@ -75,6 +75,8 @@ class YoutubeDownload(Thread):
             
             dest = os.path.join("downloads", "%(artist)s - %(album)s", "%(title)s")
             
+            print("PLAYLIST", self.item.playlist)
+            
             if self.quality == 'No':                
                 #   OPCIONES DESCARGA YOUTUBE
                 ydl_opts = {#"format":"18", #comentado desde que se habilito la descarga por url, debido a que original title se usa cuando se descarga por URL
@@ -94,6 +96,7 @@ class YoutubeDownload(Thread):
                     "nopart": True,
                     "outtmpl": dest,
                     "quiet": True,
+                    "ignoreerrors": True,
                     "downloads": self.downloadpath
                         }
             elif self.quality == 'HD':

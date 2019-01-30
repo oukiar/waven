@@ -170,7 +170,7 @@ class DownloadItem(BoxLayout):
         self.layout_download.add_widget(self.btn_play)
         
         #almacenar en la base de datos
-        song = cloud.create("Songs")
+        song = cloud.create(className="Songs")
         
         song.Title = os.path.splitext(os.path.basename(self.filename))[0]
         song.Duration = 185 #in seconds
