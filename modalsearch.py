@@ -27,7 +27,7 @@ class ResultItem(BoxLayout):
     def do_download(self):
 
         print("Antes de primer downloading")
-        title = self.title.text.encode('ascii', 'replace').replace("?", "").replace(":", "")
+        title = self.title.text # .encode('ascii', 'replace').replace("?", "").replace(":", "")
         print("Downloading " + title )
     
         #remove download button

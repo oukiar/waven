@@ -11,7 +11,7 @@ while val != 'eof':
     if val != 'eof' and frame is not None:
         img, t = frame
         # display img
-        print img
+        print (img)
 
 
         if count == 300:
@@ -28,7 +28,7 @@ while val != 'eof':
     if val != 'eof' and frame is not None:
         img, t = frame
         # display img
-        print img
+        print (img)
 
 
         if count == 300:

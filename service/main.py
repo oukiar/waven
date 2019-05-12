@@ -29,7 +29,7 @@ if __name__ == '__main__':
 import os, sys
 
 devslibpath = os.path.join("..", "devslib")
-print "DEVSLIBPATH: ", devslibpath
+print("DEVSLIBPATH: ", devslibpath)
 sys.path.append( devslibpath )
 
 #kivy stuff
@@ -43,7 +43,7 @@ def receiver(data, addr):
     data_dict = json.loads(data)
 
     if data_dict['msg'] == 'ping_ack':        
-        print 'PING ACK RECEIVED FROM ', addr, data_dict['data']
+        print('PING ACK RECEIVED FROM ', addr, data_dict['data'])
         
         #self.machines[data_dict['data']] = addr[0]
         #self.spn_machine.text = data_dict['data']

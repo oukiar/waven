@@ -34,6 +34,56 @@ estar en tu biblioteca.
 
 '''
 
+
+# Monkey patch to ssl certificate verification error
+try:
+    import ssl
+    from functools import wraps
+
+    print(('APPLYING MONKEY PATCH TO FORCE SSL '
+          'PROTOCOL V1 [SSL VERSION: {}]'.format(
+        ssl.OPENSSL_VERSION)))
+
+    def sslwrap(func):
+        @wraps(func)
+        def bar(*args, **kw):
+            kw['ssl_version'] = ssl.PROTOCOL_TLSv1
+            return func(*args, **kw)
+        return bar
+
+    # This line below is to avoid error (detected in python-2.7.12 in linux platform):
+    # URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:590)>
+    # NOTE: This error causes that the tvshow's poster not to be shown/download when trying to load with kivy loader
+    ssl._create_default_https_context = ssl._create_unverified_context
+
+    ssl.wrap_socket = sslwrap(ssl.wrap_socket)
+except Exception as e:
+    print(('ERROR ON MONKEY PATCH SSL PROTOCOL V1: {}'.format(e)))
+
+'''
+#YOUTUBE DOWNLOAD TEST
+import youtube_dl
+
+dest =  "videodesc.mp4"
+    
+#   OPCIONES DESCARGA YOUTUBE
+ydl_opts = {"format":"18", #comentado desde que se habilito la descarga por url, debido a que original title se usa cuando se descarga por URL
+#ydl_opts = {"format":"171", #comentado desde que se habilito la descarga por url, debido a que original title se usa cuando se descarga por URL
+    #"progress_hooks":[self.item.setProgress],
+    "no_color": True,
+    "nopart": True,
+    "outtmpl": dest,
+    "quiet": True
+    }
+                
+with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+    filename = ydl.download(["https://www.youtube.com/watch?v=aPcnL9U-yjQ"])
+'''
+    
+import kivy
+print("KIVYPATH", kivy.__path__)
+
+
 from kivy.uix.relativelayout import RelativeLayout 
 from kivy.uix.screenmanager import SlideTransition
 from kivy.uix.boxlayout import BoxLayout 
@@ -468,7 +518,7 @@ class WavenApp(App):
         
         
     def nextsong(self, w):
-        print w
+        print (w)
         
         
         
@@ -489,11 +539,11 @@ class WavenApp(App):
         val = ''
         while val != 'eof':
             frame, val = player.get_frame()
-            print frame, count
+            print (frame, count)
             if val != 'eof' and frame is not None:
                 img, t = frame
                 # display img
-                print img
+                print (img)
 
             if count == 300:
                 break
@@ -519,7 +569,7 @@ class WavenApp(App):
             if val != 'eof' and frame is not None:
                 img, t = frame
                 # display img
-                print img
+                print (img)
 
 
             if count == 300:
